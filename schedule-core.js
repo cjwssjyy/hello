@@ -23,7 +23,7 @@
     return { date: `${p.year}-${p.month}-${p.day}`, time: `${p.hour}:${p.minute}`, minute: Number(p.hour) * 60 + Number(p.minute) };
   }
   function overlap(a, b) { return a.start < b.end && b.start < a.end; }
-  function occurrence(course, date) { return { ...course, date, adjusted: false, isStudy: false }; }
+  function occurrence(course, date) { return { ...course, date, adjusted: false, isStudy: course.kind === "自习" }; }
   function assert(ok, message) { if (!ok) throw new Error(message); }
   function validate(data) {
     assert(data && data.term && Array.isArray(data.courses) && Array.isArray(data.changes) && Array.isArray(data.studyExceptions), "课程数据结构不完整");
@@ -102,7 +102,7 @@
         const original = data.courses.find(c => c.id === ch.courseId);
         list.push({ ...occurrence(original, date), ...ch.to, adjusted: true, note: ch.note });
       }
-      if (ch.action === "add" && ch.date === date) list.push({ ...ch.course, id: "added-" + ch.id, date, adjusted: true, isStudy: false, note: ch.note });
+      if (ch.action === "add" && ch.date === date) list.push({ ...ch.course, id: "added-" + ch.id, date, adjusted: true, isStudy: ch.course.kind === "自习", note: ch.note });
     }
     const rule = data.study;
     const exception = data.studyExceptions.find(ex => ex.date === date);
@@ -117,7 +117,7 @@
     const day = coursesFor(data, now.date);
     if (!day.published) return { type: "unpublished", label: "今日课表尚未发布", day };
     const current = day.courses.find(c => minutes(c.start) <= now.minute && now.minute < minutes(c.end));
-    if (current) return { type: "ongoing", label: current.isStudy ? "正在晚自习" : "正在上课", current, day };
+    if (current) return { type: "ongoing", label: current.isStudy ? "正在" + current.name : "正在上课", current, day };
     const next = day.courses.find(c => minutes(c.start) > now.minute);
     if (next) return { type: "free", label: "当前空闲", next, day };
     return { type: day.courses.length ? "finished" : "empty", label: day.courses.length ? "今日安排已结束" : "今日无课", day };

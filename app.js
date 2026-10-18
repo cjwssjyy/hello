@@ -36,7 +36,7 @@
       text("next-footer", "未发布的日期不代表没有课程。");
       return;
     }
-    text("next-label", state.current ? (c.isStudy ? "RIGHT NOW · 正在晚自习" : "RIGHT NOW · 正在上课") : (c.isStudy ? "UP NEXT · 下一次安排" : "UP NEXT · 下一节课"));
+    text("next-label", state.current ? (c.isStudy ? "RIGHT NOW · 正在" + c.name : "RIGHT NOW · 正在上课") : (c.isStudy ? "UP NEXT · 下一次安排" : "UP NEXT · 下一节课"));
     text("next-title", c.name);
     const relativeDate = c.date === now.date ? "今天" : c.date === core.addDays(now.date, 1) ? "明天" : core.shortDate(c.date);
     text("next-date", relativeDate + " · " + core.dayName(c.date) + (c.adjusted ? " · 已调整" : ""));
@@ -65,17 +65,18 @@
     $("prev-week").disabled = selectedWeek <= data.term.firstPublishedWeek || selectedWeek > data.term.lastPublishedWeek;
     $("next-week").disabled = selectedWeek >= data.term.lastPublishedWeek || selectedWeek < data.term.firstPublishedWeek;
     $("current-week").disabled = isCurrent;
-    let regular = 0, study = 0, published = true;
+    let regular = 0, morning = 0, study = 0, published = true;
     let html = "";
     for (let i = 0; i < 7; i++) {
       const date = core.addDays(monday, i);
       const day = core.coursesFor(data, date);
       published = published && day.published;
       regular += day.courses.filter(c => !c.isStudy).length;
-      study += day.courses.filter(c => c.isStudy).length;
+      morning += day.courses.filter(c => c.isStudy && c.name === "早自习").length;
+      study += day.courses.filter(c => c.isStudy && c.name !== "早自习").length;
       html += `<section class="week-day${date === now.date ? " is-today" : ""}" aria-label="${esc(core.shortDate(date) + core.dayName(date))}"><header class="week-day-header"><h3>${esc(core.dayName(date))}${date === now.date ? " · 今天" : ""}</h3><span>${esc(date.slice(5).replace("-", "/"))}</span></header><div class="week-day-body">${day.courses.length ? day.courses.map(weekCourse).join("") : `<p class="day-empty">${day.published ? "无课程安排" : "尚未发布"}</p>`}${day.studyNote && !day.courses.some(c => c.isStudy) ? `<p class="day-empty">${esc(day.studyNote)}</p>` : ""}</div></section>`;
     }
-    text("week-summary", published ? `${isCurrent ? "本周" : "这一周"}共 ${regular} 次课程 · ${study} 次晚自习　/　按实际时间显示` : "本周数据未发布，请向学习委员确认。");
+    text("week-summary", published ? `${isCurrent ? "本周" : "这一周"}共 ${regular} 次课程 · ${morning} 次早自习 · ${study} 次晚自习　/　按实际时间显示` : "本周数据未发布，请向学习委员确认。");
     $("week-grid").innerHTML = html;
   }
   function renderChanges() {

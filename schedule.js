@@ -6,7 +6,7 @@
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-18T14:46:17+08:00",
+  "updatedAt": "2026-10-18T21:14:28+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
     "firstPublishedWeek": 7,
@@ -24,6 +24,55 @@ window.COURSE_DATA = {
     "note": "晚自习"
   },
   "courses": [
+    {
+      "id": "morning-mon", "weekday": 1,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "07:30", "end": "08:00",
+      "name": "早自习", "kind": "自习",
+      "room": "一教404", "teacher": "", "note": ""
+    },
+    {
+      "id": "morning-tue", "weekday": 2,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "07:30", "end": "08:00",
+      "name": "早自习", "kind": "自习",
+      "room": "一教404", "teacher": "", "note": ""
+    },
+    {
+      "id": "morning-wed", "weekday": 3,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "07:30", "end": "08:00",
+      "name": "早自习", "kind": "自习",
+      "room": "一教404", "teacher": "", "note": ""
+    },
+    {
+      "id": "morning-thu", "weekday": 4,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "07:30", "end": "08:00",
+      "name": "早自习", "kind": "自习",
+      "room": "一教404", "teacher": "", "note": ""
+    },
+    {
+      "id": "morning-fri", "weekday": 5,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "07:30", "end": "08:00",
+      "name": "早自习", "kind": "自习",
+      "room": "一教404", "teacher": "", "note": ""
+    },
+    {
+      "id": "morning-sat", "weekday": 6,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "07:30", "end": "08:00",
+      "name": "早自习", "kind": "自习",
+      "room": "一教404", "teacher": "", "note": ""
+    },
+    {
+      "id": "morning-sun", "weekday": 7,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "07:30", "end": "08:00",
+      "name": "早自习", "kind": "自习",
+      "room": "一教404", "teacher": "", "note": ""
+    },
     {
       "id": "chem-mon-theory", "weekday": 1,
       "weeks": [3, 4, 10, 12, 13, 14, 15, 17],
