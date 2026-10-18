@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#243e33">
+  <meta name="description" content="查看今日、明日及本周班级课程安排。临时变动以班群和教师通知为准。">
+  <title>课程查询 · 班级课表</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="schedule.js"></script>
+  <script defer src="schedule-core.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#today">跳到今日课程</a>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="课程查询首页"><span class="brand-icon" aria-hidden="true">▦</span><span id="site-name">课程查询</span><span class="brand-sub">班级共享课表</span></a>
+      <nav aria-label="页面导航"><a href="#today">今日</a><a href="#tomorrow">明日</a><a href="#week">本周</a></nav>
+    </header>
+
+    <main id="main-content">
+      <section class="page-heading" aria-labelledby="page-title">
+        <div><p class="eyebrow">吉林工商学院 · 2026—2027 学年第一学期</p><h1 id="page-title">课程安排，一眼清楚<span class="title-dot">。</span></h1><p id="date-line" class="muted">正在读取课表…</p></div>
+        <div class="update-pill"><span class="status-dot" aria-hidden="true"></span><span id="updated-top">读取更新时间…</span></div>
+      </section>
+
+      <aside class="notice" aria-label="使用提醒"><span class="notice-icon" aria-hidden="true">i</span><p><strong>临时通知，以班群和教师通知为准。</strong><span>本页不是官方教务系统，也不是紧急通知工具；只记录已发布的安排及提前半天以上确认的调整。</span></p></aside>
+
+      <div id="load-error" class="error-panel" role="alert" hidden></div>
+      <noscript><p class="error-panel">请启用浏览器 JavaScript，以查看课程安排。</p></noscript>
+      <div id="schedule-content" hidden>
+        <div class="overview-grid">
+          <section id="today" class="panel today-panel" aria-labelledby="today-title">
+            <div class="section-heading"><div><p class="eyebrow">TODAY</p><h2 id="today-title">今日课程 <span id="today-date" class="heading-date"></span></h2></div><span id="today-count" class="count-pill"></span></div>
+            <p id="today-state" class="day-state"></p><div id="today-courses" class="course-list"></div>
+          </section>
+          <div class="side-stack">
+            <section class="next-panel" aria-labelledby="next-title"><div class="next-top"><span id="next-label" class="eyebrow">UP NEXT · 下一节课</span><span class="next-symbol" aria-hidden="true">↗</span></div><h2 id="next-title">正在读取</h2><p id="next-date"></p><div id="next-detail"></div><div id="next-footer" class="next-footer"></div></section>
+            <section id="tomorrow" class="panel tomorrow-panel" aria-labelledby="tomorrow-title"><div class="section-heading"><div><p class="eyebrow">TOMORROW</p><h2 id="tomorrow-title">明日预览 <span id="tomorrow-date" class="heading-date"></span></h2></div><span id="tomorrow-count" class="count-pill"></span></div><div id="tomorrow-courses" class="course-list compact"></div></section>
+          </div>
+        </div>
+
+        <section id="week" class="week-section" aria-labelledby="week-title">
+          <div class="week-toolbar"><div><p class="eyebrow">YOUR WEEK</p><h2 id="week-title">本周课表</h2><p id="week-range" class="muted"></p></div><div class="week-controls"><button id="prev-week" class="icon-button" aria-label="查看上一周">←</button><label class="week-select-label"><span class="sr-only">选择教学周</span><select id="week-select" aria-label="选择教学周"></select></label><button id="next-week" class="icon-button" aria-label="查看下一周">→</button><button id="current-week" class="text-button">回到本周</button></div></div>
+          <p id="week-summary" class="week-summary"></p><div id="week-grid" class="week-grid"></div>
+          <p class="week-footnote"><span class="legend-dot" aria-hidden="true"></span>晚自习：每天 18:00–19:30 没有课程时，安排 18:30–20:00，一教404。</p>
+        </section>
+
+        <section id="changes" class="panel changes-panel" aria-labelledby="changes-title"><div class="section-heading"><div><p class="eyebrow">SCHEDULE UPDATES</p><h2 id="changes-title">已确认的课程调整</h2></div><span id="changes-count" class="count-pill"></span></div><div id="changes-list"></div></section>
+      </div>
+    </main>
+
+    <footer><div><a class="footer-brand" href="#">课程查询 <span>· 学习委员统一维护</span></a><p id="updated-bottom">最近更新于：读取中</p><p id="coverage-note"></p></div><div class="footer-tip"><strong>收藏这个页面，下次直接查看。</strong><p>也可以通过手机浏览器菜单添加到主屏幕。</p><p>当天临时变动、临时换教室等，以班群和教师通知为准。</p></div></footer>
+  </div>
+</body>
+</html>
