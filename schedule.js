@@ -2,11 +2,13 @@
  * weeks 是实际开课的教学周；weekday 为周一=1，…，周日=7。
  * 不要删除开头的 window.COURSE_DATA = 或最后的分号。
  * 修改方法、临时调整格式和发布步骤见 使用与维护.md。
+ * 日语安排按2026-10-19确认：第7—10周周六晚课；周六下午只排第7周，
+ * 第8—10周同一时段保留人工智能导论；第11—18周周日下午两次课。
  */
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-18T22:33:41+08:00",
+  "updatedAt": "2026-10-19T23:03:59+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
     "firstPublishedWeek": 7,
@@ -24,6 +26,39 @@ window.COURSE_DATA = {
     "note": "晚自习"
   },
   "courses": [
+    {
+      "id": "japanese-sat-afternoon", "weekday": 6,
+      "audience": "japanese",
+      "weeks": [7],
+      "start": "15:20", "end": "16:50",
+      "name": "日语课（日语生注意）", "kind": "",
+      "room": "一教B102", "teacher": "", "note": ""
+    },
+    {
+      "id": "japanese-sat-evening", "weekday": 6,
+      "audience": "japanese",
+      "weeks": [7, 8, 9, 10],
+      "start": "18:00", "end": "19:30",
+      "name": "日语课（日语生注意）", "kind": "",
+      "room": "一教B102", "teacher": "",
+      "note": "仅日语生上课；其他同学18:30–20:00在一教404正常晚自习。"
+    },
+    {
+      "id": "japanese-sun-early", "weekday": 7,
+      "audience": "japanese",
+      "weeks": [11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "13:20", "end": "15:00",
+      "name": "日语课（日语生注意）", "kind": "",
+      "room": "一教B102", "teacher": "", "note": ""
+    },
+    {
+      "id": "japanese-sun-late", "weekday": 7,
+      "audience": "japanese",
+      "weeks": [11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "15:20", "end": "16:50",
+      "name": "日语课（日语生注意）", "kind": "",
+      "room": "一教B102", "teacher": "", "note": ""
+    },
     {
       "id": "english-group1-tue", "weekday": 2,
       "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],

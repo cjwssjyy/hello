@@ -7,12 +7,15 @@
   <meta name="description" content="查看今日、明日及本周班级课程安排。临时变动以班群和教师通知为准。">
   <title>课程查询 · 班级课表</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
-  <script defer src="schedule.js"></script>
-  <script defer src="schedule-core.js"></script>
-  <script defer src="app.js"></script>
+  <link rel="stylesheet" href="styles.css?v=20261019-smooth">
+  <script defer src="schedule.js?v=20261019-study"></script>
+  <script defer src="schedule-core.js?v=20261019-study"></script>
+  <script defer src="motion.js?v=20261019-smooth"></script>
+  <script defer src="app.js?v=20261019-study"></script>
 </head>
 <body>
+  <div class="ambient-scene" aria-hidden="true"><span class="ambient-orb orb-one"></span><span class="ambient-orb orb-two"></span><span class="ambient-orb orb-three"></span></div>
+  <div class="reading-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#today">跳到今日课程</a>
   <div class="page-shell">
     <header class="site-header">
@@ -21,8 +24,13 @@
     </header>
 
     <main id="main-content">
-      <section class="page-heading" aria-labelledby="page-title">
-        <div><p class="eyebrow">吉林工商学院 · 2026—2027 学年第一学期</p><h1 id="page-title">课程安排，一眼清楚<span class="title-dot">。</span></h1><p id="date-line" class="muted">正在读取课表…</p></div>
+      <section class="page-heading hero-panel" aria-labelledby="page-title">
+        <div class="hero-decoration" aria-hidden="true"><span class="hero-ring ring-one"></span><span class="hero-ring ring-two"></span><span class="hero-spark spark-one">✳</span><span class="hero-spark spark-two">✦</span></div>
+        <div class="hero-main">
+          <div class="hero-copy"><p class="eyebrow">吉林工商学院 · 2026—2027 学年第一学期</p><p id="hero-greeting" class="hero-greeting">今天，也要从容一点。</p><h1 id="page-title"><span class="title-line">课程安排，</span><span class="title-line title-highlight">一眼清楚<span class="title-dot">。</span></span></h1><p class="hero-caption">把时间留给学习，把课表交给这里。</p></div>
+          <div class="hero-calendar" aria-label="今日日期"><span class="calendar-shadow" aria-hidden="true"></span><div class="calendar-back" aria-hidden="true"></div><div class="calendar-page"><span class="calendar-binding" aria-hidden="true"></span><p id="calendar-month" class="calendar-month">今日</p><strong id="calendar-day" class="calendar-number">—</strong><p id="calendar-weekday" class="calendar-weekday">课程查询</p><span class="calendar-rule" aria-hidden="true"></span><span class="calendar-leaf" aria-hidden="true"><span class="leaf-month">TODAY</span><span id="calendar-leaf-day" class="leaf-number">—</span><span class="leaf-line"></span></span></div><span id="hero-week" class="calendar-week-chip">班级共享课表</span></div>
+        </div>
+        <div class="hero-bottom"><p id="date-line" class="muted">正在读取课表…</p></div>
         <div class="update-pill"><span class="status-dot" aria-hidden="true"></span><span id="updated-top">读取更新时间…</span></div>
       </section>
 
@@ -45,7 +53,7 @@
         <section id="week" class="week-section" aria-labelledby="week-title">
           <div class="week-toolbar"><div><p class="eyebrow">YOUR WEEK</p><h2 id="week-title">本周课表</h2><p id="week-range" class="muted"></p></div><div class="week-controls"><button id="prev-week" class="icon-button" aria-label="查看上一周">←</button><label class="week-select-label"><span class="sr-only">选择教学周</span><select id="week-select" aria-label="选择教学周"></select></label><button id="next-week" class="icon-button" aria-label="查看下一周">→</button><button id="current-week" class="text-button">回到本周</button></div></div>
           <p id="week-summary" class="week-summary"></p><div id="week-grid" class="week-grid"></div>
-          <p class="week-footnote"><span class="legend-dot" aria-hidden="true"></span>晚自习：每天 18:00–19:30 没有课程时，安排 18:30–20:00，一教404。</p>
+          <p class="week-footnote"><span class="legend-dot" aria-hidden="true"></span>晚自习：每天 18:00–19:30 没有全班晚课时，安排 18:30–20:00，一教404。日语生有日语晚课时，其他同学照常晚自习；请按适用人群查看。</p>
         </section>
 
         <section id="changes" class="panel changes-panel" aria-labelledby="changes-title"><div class="section-heading"><div><p class="eyebrow">SCHEDULE UPDATES</p><h2 id="changes-title">已确认的课程调整</h2></div><span id="changes-count" class="count-pill"></span></div><div id="changes-list"></div></section>

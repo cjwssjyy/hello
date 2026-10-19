@@ -3,56 +3,13 @@
   const $ = id => document.getElementById(id);
   const esc = value => String(value == null ? "" : value).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   let data, core, selectedWeek, lastDate;
-  // 装饰动画独立运行；课程先显示，不等待动画，也不在时钟刷新时重播。
-  const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const activeAnimations = new Set();
-  function playMotion(element, frames, options) {
-    if (!element || motionPreference.matches || typeof element.animate !== "function") return;
-    try {
-      const animation = element.animate(frames, options);
-      activeAnimations.add(animation);
-      const remove = () => activeAnimations.delete(animation);
-      animation.addEventListener("finish", remove, { once: true });
-      animation.addEventListener("cancel", remove, { once: true });
-    } catch (_) { /* 不支持动画时正常显示课表。 */ }
-  }
+  const weekCache = new Map();
+  let renderedWeekKey;
   function animateWeekChange() {
-    playMotion($("week-grid"), [{ opacity: .6, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 220, easing: "ease-out" });
+    try { if (window.CalendarMotion) window.CalendarMotion.week(); } catch (_) {}
   }
   function startEntrance() {
-    if (motionPreference.matches) return;
-    const elements = [...document.querySelectorAll(".site-header, .page-heading, .notice, .next-panel, .today-panel, .tomorrow-panel, .week-section, .changes-panel, footer")];
-    elements.sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
-    let observer;
-    const reveal = (element, delay) => playMotion(element, [{ opacity: .35, transform: "translateY(14px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 580, delay, easing: "cubic-bezier(.2,.7,.25,1)", fill: "backwards" });
-    if ("IntersectionObserver" in window) {
-      observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            reveal(entry.target, 0);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: .06 });
-    }
-    let index = 0;
-    elements.forEach(element => {
-      const rect = element.getBoundingClientRect();
-      if (rect.top < innerHeight && rect.bottom > 0) reveal(element, Math.min(index++ * 65, 260));
-      else if (observer) observer.observe(element);
-    });
-    playMotion(document.querySelector(".brand-icon"), [{ transform: "rotate(-9deg) scale(.9)" }, { transform: "rotate(3deg) scale(1.04)", offset: .65 }, { transform: "rotate(0) scale(1)" }], { duration: 650, easing: "ease-out" });
-    const stop = () => {
-      if (!motionPreference.matches) return;
-      for (const animation of activeAnimations) animation.cancel();
-      activeAnimations.clear();
-      if (observer) observer.disconnect();
-    };
-    if (typeof motionPreference.addEventListener === "function") motionPreference.addEventListener("change", stop);
-    window.addEventListener("beforeprint", () => {
-      for (const animation of activeAnimations) animation.cancel();
-      if (observer) observer.disconnect();
-    });
+    if (window.CalendarMotion) window.CalendarMotion.init();
   }
   function text(id, value) { $(id).textContent = value; }
   function courseMeta(c, separator) { return [c.room, c.teacher].filter(Boolean).map(esc).join(separator); }
@@ -79,6 +36,14 @@
     return day;
   }
   function renderNext(now, state) {
+    if (state.currents && state.currents.length > 1) {
+      text("next-label", "RIGHT NOW · 分组安排");
+      text("next-title", "日语课与晚自习");
+      text("next-date", "今天 · " + core.dayName(now.date));
+      $("next-detail").innerHTML = state.currents.map(c => `<div class="next-meta"><h3>${esc(c.name)}</h3><p>${esc(c.start)}–${esc(c.end)} · ${courseMeta(c, " · ")}</p>${c.note ? `<p>${esc(c.note)}</p>` : ""}</div>`).join("");
+      text("next-footer", "请按对应人群查看各自的时间和教室。");
+      return;
+    }
     const c = state.current || core.findNext(data, now);
     if (!c) {
       text("next-label", "UP NEXT · 后续安排");
@@ -107,6 +72,8 @@
     return `<article class="week-course${c.isStudy ? " is-study" : ""}"><p class="week-course-time">${esc(c.start)}–${esc(c.end)}</p><h3>${esc(c.name)}</h3>${c.room || c.teacher || c.note ? `<p class="week-course-meta">${[courseMeta(c, "<br>"), esc(c.note)].filter(Boolean).join("<br>")}</p>` : ""}${c.adjusted ? '<span class="tag adjusted">已调整</span>' : ""}</article>`;
   }
   function renderWeek(now) {
+    const key = now.date + ':' + selectedWeek;
+    if (renderedWeekKey === key) return false;
     const currentWeek = core.weekOf(data, now.date);
     const isCurrent = selectedWeek === currentWeek;
     const monday = core.weekMonday(data, selectedWeek);
@@ -117,19 +84,27 @@
     $("prev-week").disabled = selectedWeek <= data.term.firstPublishedWeek || selectedWeek > data.term.lastPublishedWeek;
     $("next-week").disabled = selectedWeek >= data.term.lastPublishedWeek || selectedWeek < data.term.firstPublishedWeek;
     $("current-week").disabled = isCurrent;
-    let regular = 0, morning = 0, study = 0, published = true;
-    let html = "";
-    for (let i = 0; i < 7; i++) {
-      const date = core.addDays(monday, i);
-      const day = core.coursesFor(data, date);
-      published = published && day.published;
-      regular += day.courses.filter(c => !c.isStudy).length;
-      morning += day.courses.filter(c => c.isStudy && c.name === "早自习").length;
-      study += day.courses.filter(c => c.isStudy && c.name !== "早自习").length;
-      html += `<section class="week-day${date === now.date ? " is-today" : ""}" aria-label="${esc(core.shortDate(date) + core.dayName(date))}"><header class="week-day-header"><h3>${esc(core.dayName(date))}${date === now.date ? " · 今天" : ""}</h3><span>${esc(date.slice(5).replace("-", "/"))}</span></header><div class="week-day-body">${day.courses.length ? day.courses.map(weekCourse).join("") : `<p class="day-empty">${day.published ? "无课程安排" : "尚未发布"}</p>`}${day.studyNote && !day.courses.some(c => c.isStudy) ? `<p class="day-empty">${esc(day.studyNote)}</p>` : ""}</div></section>`;
+    let cached = weekCache.get(key);
+    if (!cached) {
+      let regular = 0, morning = 0, study = 0, published = true;
+      let html = "";
+      for (let i = 0; i < 7; i++) {
+        const date = core.addDays(monday, i);
+        const day = core.coursesFor(data, date);
+        published = published && day.published;
+        regular += day.courses.filter(c => !c.isStudy).length;
+        morning += day.courses.filter(c => c.isStudy && c.name === "早自习").length;
+        study += day.courses.filter(c => c.isStudy && c.name !== "早自习").length;
+        html += `<section class="week-day${date === now.date ? " is-today" : ""}" aria-label="${esc(core.shortDate(date) + core.dayName(date))}"><header class="week-day-header"><h3>${esc(core.dayName(date))}${date === now.date ? " · 今天" : ""}</h3><span>${esc(date.slice(5).replace("-", "/"))}</span></header><div class="week-day-body">${day.courses.length ? day.courses.map(weekCourse).join("") : `<p class="day-empty">${day.published ? "无课程安排" : "尚未发布"}</p>`}${day.studyNote && !day.courses.some(c => c.isStudy) ? `<p class="day-empty">${esc(day.studyNote)}</p>` : ""}</div></section>`;
+      }
+      cached = { regular, morning, study, published, html };
+      weekCache.set(key, cached);
     }
+    const { regular, morning, study, published, html } = cached;
     text("week-summary", published ? `${isCurrent ? "本周" : "这一周"}共 ${regular} 次课程 · ${morning} 次早自习 · ${study} 次晚自习　/　按实际时间显示` : "本周数据未发布，请向学习委员确认。");
     $("week-grid").innerHTML = html;
+    renderedWeekKey = key;
+    return true;
   }
   function renderChanges() {
     const changes = [...data.changes].sort((a, b) => b.confirmedAt.localeCompare(a.confirmedAt));
@@ -151,7 +126,9 @@
   }
   function render() {
     const now = core.schoolNow();
+    try { if (window.CalendarMotion) window.CalendarMotion.update(now, core, data); } catch (_) {}
     if (lastDate !== now.date) {
+      weekCache.clear();
       if (lastDate == null || selectedWeek === core.weekOf(data, lastDate)) selectedWeek = core.weekOf(data, now.date);
       buildWeekSelect(now);
       lastDate = now.date;
@@ -161,7 +138,7 @@
     dayList("today", now.date, now);
     dayList("tomorrow", core.addDays(now.date, 1), now);
     const state = core.dayState(data, now);
-    const suffix = state.type === "free" ? ` · 今日下一次安排 ${state.next.start} 开始` : state.type === "ongoing" ? ` · ${state.current.end} 结束` : "";
+    const suffix = state.currents && state.currents.length > 1 ? " · 请按适用人群查看" : state.type === "free" ? ` · 今日下一次安排 ${state.next.start} 开始` : state.type === "ongoing" ? ` · ${state.current.end} 结束` : "";
     text("today-state", state.label + suffix);
     renderNext(now, state);
     renderWeek(now);
@@ -186,10 +163,10 @@
     renderChanges();
     render();
     $("schedule-content").hidden = false;
-    $("week-select").addEventListener("change", e => { selectedWeek = Number(e.target.value); renderWeek(core.schoolNow()); animateWeekChange(); });
-    $("prev-week").addEventListener("click", () => { selectedWeek--; renderWeek(core.schoolNow()); animateWeekChange(); });
-    $("next-week").addEventListener("click", () => { selectedWeek++; renderWeek(core.schoolNow()); animateWeekChange(); });
-    $("current-week").addEventListener("click", () => { selectedWeek = core.weekOf(data, core.schoolNow().date); renderWeek(core.schoolNow()); animateWeekChange(); });
+    $("week-select").addEventListener("change", e => { selectedWeek = Number(e.target.value); if (renderWeek(core.schoolNow())) animateWeekChange(); });
+    $("prev-week").addEventListener("click", () => { selectedWeek--; if (renderWeek(core.schoolNow())) animateWeekChange(); });
+    $("next-week").addEventListener("click", () => { selectedWeek++; if (renderWeek(core.schoolNow())) animateWeekChange(); });
+    $("current-week").addEventListener("click", () => { selectedWeek = core.weekOf(data, core.schoolNow().date); if (renderWeek(core.schoolNow())) animateWeekChange(); });
     // 仅更新时钟状态，不做后台同步；离开页面后返回立即更新，避免过时的“正在上课”。
     setInterval(() => { try { render(); } catch (e) { showError(e); } }, 30000);
     document.addEventListener("visibilitychange", () => { if (!document.hidden) { try { render(); } catch (e) { showError(e); } } });

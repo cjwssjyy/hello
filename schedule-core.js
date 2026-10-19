@@ -23,6 +23,12 @@
     return { date: `${p.year}-${p.month}-${p.day}`, time: `${p.hour}:${p.minute}`, minute: Number(p.hour) * 60 + Number(p.minute) };
   }
   function overlap(a, b) { return a.start < b.end && b.start < a.end; }
+  function sharesAudience(a, b) {
+    return !((a.audience === "japanese" && b.audience === "non-japanese") || (a.audience === "non-japanese" && b.audience === "japanese"));
+  }
+  function validateAudience(item) {
+    assert(item.audience === undefined || ["all", "japanese", "non-japanese"].includes(item.audience), "课程适用人群无效");
+  }
   function occurrence(course, date) { return { ...course, date, adjusted: false, isStudy: course.kind === "自习" }; }
   function assert(ok, message) { if (!ok) throw new Error(message); }
   function hasRoom(item) { return typeof item.room === "string" && (item.room.trim() || item.roomOmitted === true); }
@@ -42,6 +48,7 @@
       assert(typeof c.name === "string" && c.name.trim() && hasRoom(c), c.id + "缺少课程名或教室（分班课需明确设置 roomOmitted）");
       for (const key of ["teacher", "note", "kind"]) assert(typeof c[key] === "string", c.id + "的 " + key + " 必须为文字");
       validateTime(c, c.id);
+      validateAudience(c);
     }
     const study = data.study;
     assert(study && typeof study.enabled === "boolean" && Array.isArray(study.weekdays) && study.weekdays.every(d => Number.isInteger(d) && d >= 1 && d <= 7), "晚自习规则无效");
@@ -60,6 +67,7 @@
         assert(change.course && change.course.name && typeof change.course.name === "string" && hasRoom(change.course), "补课须填写课程名和教室（分班课可设置 roomOmitted）");
         for (const key of ["teacher", "note", "kind"]) assert(typeof change.course[key] === "string", "补课字段 " + key + " 必须为文字");
         validateTime(change.course, "补课");
+        validateAudience(change.course);
         earliest = Date.parse(change.date + "T" + change.course.start + ":00+08:00");
       } else {
         const c = data.courses.find(item => item.id === change.courseId);
@@ -72,6 +80,7 @@
           for (const key of ["start", "end"]) assert(typeof change.to[key] === "string" && change.to[key], "修改课程须填写 " + key);
           assert(hasRoom({ ...c, ...change.to }), "修改课程须填写教室或设置 roomOmitted");
           validateTime(change.to, "调整后课程");
+          validateAudience({ ...c, ...change.to });
           earliest = Math.min(earliest, Date.parse(change.to.date + "T" + change.to.start + ":00+08:00"));
         }
       }
@@ -90,7 +99,11 @@
     const last = addDays(weekMonday(data, data.term.lastPublishedWeek), 6);
     for (let d = first; d <= last; d = addDays(d, 1)) {
       const list = coursesFor(data, d).courses;
-      for (let i = 1; i < list.length; i++) assert(!overlap(list[i - 1], list[i]), shortDate(d) + "的课程时间有冲突，请核对");
+      for (let i = 0; i < list.length; i++) {
+        for (let j = i + 1; j < list.length && list[j].start < list[i].end; j++) {
+          assert(!overlap(list[i], list[j]) || !sharesAudience(list[i], list[j]), shortDate(d) + "的课程时间有冲突，请核对");
+        }
+      }
     }
     return data;
   }
@@ -109,8 +122,12 @@
     const rule = data.study;
     const exception = data.studyExceptions.find(ex => ex.date === date);
     const shouldStudy = (exception ? exception.enabled : rule.enabled) && rule.weekdays.includes(weekday(date));
-    if (shouldStudy && !list.some(c => overlap(c, { start: rule.checkStart, end: rule.checkEnd }))) {
-      list.push({ id: "study-" + date, date, start: rule.start, end: rule.end, name: "晚自习", kind: "自习", room: rule.room, teacher: "", note: exception ? exception.note : "", adjusted: Boolean(exception), isStudy: true });
+    const evening = { start: rule.checkStart, end: rule.checkEnd };
+    const japaneseEvening = list.some(c => c.audience === "japanese" && overlap(c, evening));
+    const studyAudience = japaneseEvening ? "non-japanese" : "all";
+    if (shouldStudy && !list.some(c => sharesAudience(c, { audience: studyAudience }) && overlap(c, evening))) {
+      const audienceNote = japaneseEvening ? "其他同学正常晚自习；日语生按日语课安排上课。" : "";
+      list.push({ id: "study-" + date, date, start: rule.start, end: rule.end, name: "晚自习", kind: "自习", room: rule.room, teacher: "", audience: studyAudience, note: [exception ? exception.note : "", audienceNote].filter(Boolean).join("；"), adjusted: Boolean(exception), isStudy: true });
     }
     list.sort((a, b) => a.start.localeCompare(b.start) || a.end.localeCompare(b.end));
     return { published: true, courses: list, studyNote: exception ? exception.note : "" };
@@ -118,8 +135,9 @@
   function dayState(data, now) {
     const day = coursesFor(data, now.date);
     if (!day.published) return { type: "unpublished", label: "今日课表尚未发布", day };
-    const current = day.courses.find(c => minutes(c.start) <= now.minute && now.minute < minutes(c.end));
-    if (current) return { type: "ongoing", label: current.isStudy ? "正在" + current.name : "正在上课", current, day };
+    const currents = day.courses.filter(c => minutes(c.start) <= now.minute && now.minute < minutes(c.end));
+    const current = currents[0];
+    if (current) return { type: "ongoing", label: currents.length > 1 ? "分组安排进行中" : current.isStudy ? "正在" + current.name : "正在上课", current, currents, day };
     const next = day.courses.find(c => minutes(c.start) > now.minute);
     if (next) return { type: "free", label: "当前空闲", next, day };
     return { type: day.courses.length ? "finished" : "empty", label: day.courses.length ? "今日安排已结束" : "今日无课", day };
