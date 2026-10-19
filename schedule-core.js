@@ -25,6 +25,7 @@
   function overlap(a, b) { return a.start < b.end && b.start < a.end; }
   function occurrence(course, date) { return { ...course, date, adjusted: false, isStudy: course.kind === "自习" }; }
   function assert(ok, message) { if (!ok) throw new Error(message); }
+  function hasRoom(item) { return typeof item.room === "string" && (item.room.trim() || item.roomOmitted === true); }
   function validate(data) {
     assert(data && data.term && Array.isArray(data.courses) && Array.isArray(data.changes) && Array.isArray(data.studyExceptions), "课程数据结构不完整");
     assert(data.timezone === "Asia/Shanghai", "时区必须为 Asia/Shanghai");
@@ -38,7 +39,7 @@
       assert(typeof c.id === "string" && c.id && !ids.has(c.id), "课程 id 为空或重复"); ids.add(c.id);
       assert(Number.isInteger(c.weekday) && c.weekday >= 1 && c.weekday <= 7, c.id + "的星期无效");
       assert(Array.isArray(c.weeks) && c.weeks.length > 0 && c.weeks.every(w => Number.isInteger(w) && w >= 1 && w <= 53) && new Set(c.weeks).size === c.weeks.length, c.id + "的开课周次无效");
-      assert(typeof c.name === "string" && c.name.trim() && typeof c.room === "string" && c.room.trim(), c.id + "缺少课程名或教室");
+      assert(typeof c.name === "string" && c.name.trim() && hasRoom(c), c.id + "缺少课程名或教室（分班课需明确设置 roomOmitted）");
       for (const key of ["teacher", "note", "kind"]) assert(typeof c[key] === "string", c.id + "的 " + key + " 必须为文字");
       validateTime(c, c.id);
     }
@@ -56,7 +57,7 @@
       assert(typeof change.note === "string" && change.note.trim(), "请填写调整说明");
       let earliest;
       if (change.action === "add") {
-        assert(change.course && change.course.name && typeof change.course.name === "string" && change.course.room && typeof change.course.room === "string", "补课须填写课程名和教室");
+        assert(change.course && change.course.name && typeof change.course.name === "string" && hasRoom(change.course), "补课须填写课程名和教室（分班课可设置 roomOmitted）");
         for (const key of ["teacher", "note", "kind"]) assert(typeof change.course[key] === "string", "补课字段 " + key + " 必须为文字");
         validateTime(change.course, "补课");
         earliest = Date.parse(change.date + "T" + change.course.start + ":00+08:00");
@@ -68,7 +69,8 @@
         earliest = Date.parse(change.date + "T" + c.start + ":00+08:00");
         if (change.action === "modify") {
           assert(change.to && validDate(change.to.date) && isPublished(data, change.to.date), "调整后日期不在已发布范围内");
-          for (const key of ["start", "end", "room"]) assert(typeof change.to[key] === "string" && change.to[key], "修改课程须填写 " + key);
+          for (const key of ["start", "end"]) assert(typeof change.to[key] === "string" && change.to[key], "修改课程须填写 " + key);
+          assert(hasRoom({ ...c, ...change.to }), "修改课程须填写教室或设置 roomOmitted");
           validateTime(change.to, "调整后课程");
           earliest = Math.min(earliest, Date.parse(change.to.date + "T" + change.to.start + ":00+08:00"));
         }

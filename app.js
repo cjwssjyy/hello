@@ -4,6 +4,7 @@
   const esc = value => String(value == null ? "" : value).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   let data, core, selectedWeek, lastDate;
   function text(id, value) { $(id).textContent = value; }
+  function courseMeta(c, separator) { return [c.room, c.teacher].filter(Boolean).map(esc).join(separator); }
   function fullStamp(value) {
     return new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(value));
   }
@@ -14,7 +15,7 @@
     const isToday = now && c.date === now.date;
     const past = isToday && core.minutes(c.end) <= now.minute;
     const current = isToday && core.minutes(c.start) <= now.minute && now.minute < core.minutes(c.end);
-    return `<article class="course-row${c.isStudy ? " is-study" : ""}${past ? " is-past" : ""}${current ? " is-current" : ""}"><div class="course-time"><time datetime="${esc(c.date)}T${esc(c.start)}:00+08:00">${esc(c.start)}</time><time class="end-time" datetime="${esc(c.date)}T${esc(c.end)}:00+08:00">– ${esc(c.end)}</time></div><div class="course-info"><h3>${esc(c.name)}</h3><p class="course-meta"><span>${esc(c.room)}</span>${c.teacher ? `<span>${esc(c.teacher)}</span>` : ""}</p>${c.note ? `<p class="course-note">${esc(c.note)}</p>` : ""}${tags(c, current ? "current" : "")}</div></article>`;
+    return `<article class="course-row${c.isStudy ? " is-study" : ""}${past ? " is-past" : ""}${current ? " is-current" : ""}"><div class="course-time"><time datetime="${esc(c.date)}T${esc(c.start)}:00+08:00">${esc(c.start)}</time><time class="end-time" datetime="${esc(c.date)}T${esc(c.end)}:00+08:00">– ${esc(c.end)}</time></div><div class="course-info"><h3>${esc(c.name)}</h3>${c.room || c.teacher ? `<p class="course-meta">${courseMeta(c, " · ")}</p>` : ""}${c.note ? `<p class="course-note">${esc(c.note)}</p>` : ""}${tags(c, current ? "current" : "")}</div></article>`;
   }
   function emptyMarkup(published) {
     return published ? '<div class="empty-state"><strong>这一天没有课程安排</strong>好好安排你的自由时间。</div>' : '<div class="empty-state"><strong>课表尚未发布</strong>请向学习委员确认，不能据此判断为无课。</div>';
@@ -40,7 +41,7 @@
     text("next-title", c.name);
     const relativeDate = c.date === now.date ? "今天" : c.date === core.addDays(now.date, 1) ? "明天" : core.shortDate(c.date);
     text("next-date", relativeDate + " · " + core.dayName(c.date) + (c.adjusted ? " · 已调整" : ""));
-    $("next-detail").innerHTML = `<p class="next-detail-time">${esc(c.start)} <span aria-hidden="true">–</span> ${esc(c.end)}</p><p class="next-meta">${esc(c.room)}${c.teacher ? " · " + esc(c.teacher) : ""}</p>`;
+    $("next-detail").innerHTML = `<p class="next-detail-time">${esc(c.start)} <span aria-hidden="true">–</span> ${esc(c.end)}</p>${c.room || c.teacher ? `<p class="next-meta">${courseMeta(c, " · ")}</p>` : ""}${c.note ? `<p class="next-meta">${esc(c.note)}</p>` : ""}`;
     const gap = core.minutes(c.start) - now.minute;
     text("next-footer", state.current ? `距结束还有 ${core.minutes(c.end) - now.minute} 分钟` : c.date === now.date ? `当前空闲 · 距开始还有 ${gap >= 60 ? Math.floor(gap / 60) + " 小时" + (gap % 60 ? " " + gap % 60 + " 分钟" : "") : gap + " 分钟"}` : `今天${state.type === "unpublished" ? "课表未发布" : "没有后续安排"} · 下一次安排在${relativeDate}`);
   }
@@ -52,7 +53,7 @@
     $("week-select").innerHTML = options;
   }
   function weekCourse(c) {
-    return `<article class="week-course${c.isStudy ? " is-study" : ""}"><p class="week-course-time">${esc(c.start)}–${esc(c.end)}</p><h3>${esc(c.name)}</h3><p class="week-course-meta">${esc(c.room)}${c.teacher ? "<br>" + esc(c.teacher) : ""}${c.note ? "<br>" + esc(c.note) : ""}</p>${c.adjusted ? '<span class="tag adjusted">已调整</span>' : ""}</article>`;
+    return `<article class="week-course${c.isStudy ? " is-study" : ""}"><p class="week-course-time">${esc(c.start)}–${esc(c.end)}</p><h3>${esc(c.name)}</h3>${c.room || c.teacher || c.note ? `<p class="week-course-meta">${[courseMeta(c, "<br>"), esc(c.note)].filter(Boolean).join("<br>")}</p>` : ""}${c.adjusted ? '<span class="tag adjusted">已调整</span>' : ""}</article>`;
   }
   function renderWeek(now) {
     const currentWeek = core.weekOf(data, now.date);
@@ -90,8 +91,8 @@
     let html = changes.map(ch => {
       const original = ch.action === "add" ? ch.course : data.courses.find(c => c.id === ch.courseId);
       const status = { modify: "已调整", cancel: "已取消", add: "新增课程" }[ch.action];
-      const oldLine = core.shortDate(ch.date) + " " + original.start + "–" + original.end + " · " + original.room;
-      const newLine = ch.action === "modify" ? core.shortDate(ch.to.date) + " " + ch.to.start + "–" + ch.to.end + " · " + ch.to.room : "";
+      const oldLine = core.shortDate(ch.date) + " " + original.start + "–" + original.end + (original.room ? " · " + original.room : "");
+      const newLine = ch.action === "modify" ? core.shortDate(ch.to.date) + " " + ch.to.start + "–" + ch.to.end + ((ch.to.room ?? original.room) ? " · " + (ch.to.room ?? original.room) : "") : "";
       return `<article class="change-item"><h3>${esc(original.name)}<span class="change-status">${status}</span></h3><p>${ch.action === "add" ? "安排：" : "原安排："}${esc(oldLine)}</p>${newLine ? `<p>调整为：${esc(newLine)}</p>` : ""}<p class="change-reason">${esc(ch.note)}</p><p>确认于 ${esc(fullStamp(ch.confirmedAt))}（北京时间）</p></article>`;
     }).join("");
     html += exceptions.map(ex => `<article class="change-item"><h3>${esc(core.shortDate(ex.date))} 晚自习<span class="change-status">${ex.enabled ? "已安排" : "已取消"}</span></h3><p class="change-reason">${esc(ex.note)}</p><p>确认于 ${esc(fullStamp(ex.confirmedAt))}（北京时间）</p></article>`).join("");

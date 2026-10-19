@@ -6,7 +6,7 @@
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-18T21:14:28+08:00",
+  "updatedAt": "2026-10-18T22:33:41+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
     "firstPublishedWeek": 7,
@@ -24,6 +24,38 @@ window.COURSE_DATA = {
     "note": "晚自习"
   },
   "courses": [
+    {
+      "id": "english-group1-tue", "weekday": 2,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "08:20", "end": "10:00",
+      "name": "英语课（A，B1,B4,B7,B8）", "kind": "分班课程",
+      "room": "", "roomOmitted": true, "teacher": "",
+      "note": "仅对应英语分班同学上课；教室和老师请按本人分班安排确认。"
+    },
+    {
+      "id": "english-group2-tue", "weekday": 2,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "10:20", "end": "12:00",
+      "name": "英语课（B2，B3，B5，B6，B9，C1，C2）", "kind": "分班课程",
+      "room": "", "roomOmitted": true, "teacher": "",
+      "note": "仅对应英语分班同学上课；教室和老师请按本人分班安排确认。"
+    },
+    {
+      "id": "english-group1-thu", "weekday": 4,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "13:20", "end": "15:00",
+      "name": "英语课（A，B1,B4,B7,B8）", "kind": "分班课程",
+      "room": "", "roomOmitted": true, "teacher": "",
+      "note": "仅对应英语分班同学上课；教室和老师请按本人分班安排确认。"
+    },
+    {
+      "id": "english-group2-thu", "weekday": 4,
+      "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "start": "15:20", "end": "16:50",
+      "name": "英语课（B2，B3，B5，B6，B9，C1，C2）", "kind": "分班课程",
+      "room": "", "roomOmitted": true, "teacher": "",
+      "note": "仅对应英语分班同学上课；教室和老师请按本人分班安排确认。"
+    },
     {
       "id": "morning-mon", "weekday": 1,
       "weeks": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
