@@ -3,6 +3,57 @@
   const $ = id => document.getElementById(id);
   const esc = value => String(value == null ? "" : value).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   let data, core, selectedWeek, lastDate;
+  // 装饰动画独立运行；课程先显示，不等待动画，也不在时钟刷新时重播。
+  const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const activeAnimations = new Set();
+  function playMotion(element, frames, options) {
+    if (!element || motionPreference.matches || typeof element.animate !== "function") return;
+    try {
+      const animation = element.animate(frames, options);
+      activeAnimations.add(animation);
+      const remove = () => activeAnimations.delete(animation);
+      animation.addEventListener("finish", remove, { once: true });
+      animation.addEventListener("cancel", remove, { once: true });
+    } catch (_) { /* 不支持动画时正常显示课表。 */ }
+  }
+  function animateWeekChange() {
+    playMotion($("week-grid"), [{ opacity: .6, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 220, easing: "ease-out" });
+  }
+  function startEntrance() {
+    if (motionPreference.matches) return;
+    const elements = [...document.querySelectorAll(".site-header, .page-heading, .notice, .next-panel, .today-panel, .tomorrow-panel, .week-section, .changes-panel, footer")];
+    elements.sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+    let observer;
+    const reveal = (element, delay) => playMotion(element, [{ opacity: .35, transform: "translateY(14px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 580, delay, easing: "cubic-bezier(.2,.7,.25,1)", fill: "backwards" });
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            reveal(entry.target, 0);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: .06 });
+    }
+    let index = 0;
+    elements.forEach(element => {
+      const rect = element.getBoundingClientRect();
+      if (rect.top < innerHeight && rect.bottom > 0) reveal(element, Math.min(index++ * 65, 260));
+      else if (observer) observer.observe(element);
+    });
+    playMotion(document.querySelector(".brand-icon"), [{ transform: "rotate(-9deg) scale(.9)" }, { transform: "rotate(3deg) scale(1.04)", offset: .65 }, { transform: "rotate(0) scale(1)" }], { duration: 650, easing: "ease-out" });
+    const stop = () => {
+      if (!motionPreference.matches) return;
+      for (const animation of activeAnimations) animation.cancel();
+      activeAnimations.clear();
+      if (observer) observer.disconnect();
+    };
+    if (typeof motionPreference.addEventListener === "function") motionPreference.addEventListener("change", stop);
+    window.addEventListener("beforeprint", () => {
+      for (const animation of activeAnimations) animation.cancel();
+      if (observer) observer.disconnect();
+    });
+  }
   function text(id, value) { $(id).textContent = value; }
   function courseMeta(c, separator) { return [c.room, c.teacher].filter(Boolean).map(esc).join(separator); }
   function fullStamp(value) {
@@ -135,12 +186,13 @@
     renderChanges();
     render();
     $("schedule-content").hidden = false;
-    $("week-select").addEventListener("change", e => { selectedWeek = Number(e.target.value); renderWeek(core.schoolNow()); });
-    $("prev-week").addEventListener("click", () => { selectedWeek--; renderWeek(core.schoolNow()); });
-    $("next-week").addEventListener("click", () => { selectedWeek++; renderWeek(core.schoolNow()); });
-    $("current-week").addEventListener("click", () => { selectedWeek = core.weekOf(data, core.schoolNow().date); renderWeek(core.schoolNow()); });
+    $("week-select").addEventListener("change", e => { selectedWeek = Number(e.target.value); renderWeek(core.schoolNow()); animateWeekChange(); });
+    $("prev-week").addEventListener("click", () => { selectedWeek--; renderWeek(core.schoolNow()); animateWeekChange(); });
+    $("next-week").addEventListener("click", () => { selectedWeek++; renderWeek(core.schoolNow()); animateWeekChange(); });
+    $("current-week").addEventListener("click", () => { selectedWeek = core.weekOf(data, core.schoolNow().date); renderWeek(core.schoolNow()); animateWeekChange(); });
     // 仅更新时钟状态，不做后台同步；离开页面后返回立即更新，避免过时的“正在上课”。
     setInterval(() => { try { render(); } catch (e) { showError(e); } }, 30000);
     document.addEventListener("visibilitychange", () => { if (!document.hidden) { try { render(); } catch (e) { showError(e); } } });
+    try { startEntrance(); } catch (_) { /* 动效异常不影响查课和时间刷新。 */ }
   } catch (e) { showError(e); }
 })();
