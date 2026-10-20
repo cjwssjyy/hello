@@ -9,6 +9,7 @@
   function visible() { return document.visibilityState !== 'hidden'; }
   function arrive(el) {
     if (seen.indexOf(el) !== -1) return;
+    el.style.setProperty('--stage-arrive-delay', Math.min(seen.length, 3) * 60 + 'ms');
     seen.push(el);
     if (!preference.matches) el.classList.add('stage-card-arrive');
     if (observer) observer.unobserve(el);
