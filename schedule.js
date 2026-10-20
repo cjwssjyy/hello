@@ -8,7 +8,7 @@
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-20T17:22:05+08:00",
+  "updatedAt": "2026-10-20T21:16:06+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
     "firstPublishedWeek": 7,
@@ -274,6 +274,23 @@ window.COURSE_DATA = {
       "room": "一教B202", "teacher": "于霄达", "note": ""
     }
   ],
-  "changes": [],
+  "changes": [
+    {
+        "id":  "cancel-military-20261022",
+        "action":  "cancel",
+        "date":  "2026-10-22",
+        "courseId":  "military-thu",
+        "confirmedAt":  "2026-10-20T21:16:06+08:00",
+        "note":  "本周四军事理论改为晚自习：18:30–20:00，一教404，无任课老师。"
+    },
+    {
+        "id":  "cancel-military-20261023",
+        "action":  "cancel",
+        "date":  "2026-10-23",
+        "courseId":  "military-fri",
+        "confirmedAt":  "2026-10-20T21:16:06+08:00",
+        "note":  "本周五军事理论改为晚自习：18:30–20:00，一教404，无任课老师。"
+    }
+],
   "studyExceptions": []
 };
