@@ -8,7 +8,7 @@
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-19T23:03:59+08:00",
+  "updatedAt": "2026-10-20T17:22:05+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
     "firstPublishedWeek": 7,
@@ -254,7 +254,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "art-tue", "weekday": 2,
-      "weeks": [3, 4, 5, 8, 9, 10, 11, 12],
+      "weeks": [3, 4, 5, 9, 10, 11, 12],
       "start": "18:00", "end": "19:30",
       "name": "大学美育", "kind": "理论",
       "room": "一教B201", "teacher": "李辰", "note": ""
