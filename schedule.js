@@ -8,7 +8,7 @@
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-20T22:55:56+08:00",
+  "updatedAt": "2026-10-20T23:24:18+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
     "firstPublishedWeek": 7,
@@ -63,7 +63,7 @@ window.COURSE_DATA = {
                           2
                       ],
         "room":  "实验楼B507",
-        "teacher":  "",
+        "teacher":  "王一婷",
         "note":  "仅二组同学上课。"
     },
     {
@@ -103,7 +103,7 @@ window.COURSE_DATA = {
                           2
                       ],
         "room":  "实验楼B507",
-        "teacher":  "",
+        "teacher":  "王一婷",
         "note":  "仅二组同学上课。"
     },
     {
@@ -121,7 +121,7 @@ window.COURSE_DATA = {
                           2
                       ],
         "room":  "实验楼B507",
-        "teacher":  "",
+        "teacher":  "王一婷",
         "note":  "仅二组同学上课。"
     },
     {
