@@ -1,7 +1,9 @@
 /* Mobile Stage 1: CSS owns all motion. No hover, Web Animations API or JS enable flag. */
 .hero-calendar { animation: stage-calendar-enter 1.65s cubic-bezier(.2,.8,.2,1) .12s both; transform-origin: 55% 65%; }
-.calendar-page { animation: stage-calendar-float 5.4s ease-in-out 1.85s infinite; }
-.calendar-back { animation: stage-paper-fan 5.4s ease-in-out 1.85s infinite; }
+/* Keep the inner paper moving throughout the outer entrance. A negative phase
+   places the end of the entrance on a moving part of the loop, with no handoff. */
+.calendar-page { animation: stage-calendar-float 5.4s ease-in-out -.55s infinite; }
+.calendar-back { animation: stage-paper-fan 5.4s ease-in-out -.55s infinite; }
 .calendar-week-chip { animation: stage-chip-enter 1.3s cubic-bezier(.2,.8,.2,1) .65s both; }
 .hero-copy .title-line { animation: stage-title-enter 1.2s cubic-bezier(.16,.8,.2,1) .2s both; }
 .hero-copy .title-line + .title-line { animation-delay: .38s; }
