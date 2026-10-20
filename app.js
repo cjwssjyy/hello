@@ -61,17 +61,23 @@
     const gap = core.minutes(c.start) - now.minute;
     text("next-footer", state.current ? `距结束还有 ${core.minutes(c.end) - now.minute} 分钟` : c.date === now.date ? `当前空闲 · 距开始还有 ${gap >= 60 ? Math.floor(gap / 60) + " 小时" + (gap % 60 ? " " + gap % 60 + " 分钟" : "") : gap + " 分钟"}` : `今天${state.type === "unpublished" ? "课表未发布" : "没有后续安排"} · 下一次安排在${relativeDate}`);
   }
+  function availableWeeks(now) {
+    const current = core.weekOf(data, now.date);
+    const weeks = [current];
+    for (let w = Math.max(current + 1, data.term.firstPublishedWeek); w <= data.term.lastPublishedWeek; w++) weeks.push(w);
+    return weeks;
+  }
   function buildWeekSelect(now) {
     const current = core.weekOf(data, now.date);
-    let options = "";
-    for (let w = data.term.firstPublishedWeek; w <= data.term.lastPublishedWeek; w++) options += `<option value="${w}">第 ${w} 周${w === current ? " · 本周" : ""}</option>`;
-    if (current < data.term.firstPublishedWeek || current > data.term.lastPublishedWeek) options += `<option value="${current}">本周 · 未发布</option>`;
-    $("week-select").innerHTML = options;
+    $("week-select").innerHTML = availableWeeks(now).map(w => `<option value="${w}">${w === current && !core.isPublished(data, now.date) ? "本周 · 未发布" : `第 ${w} 周${w === current ? " · 本周" : ""}`}</option>`).join("");
   }
   function weekCourse(c) {
     return `<article class="week-course${c.isStudy ? " is-study" : ""}"><p class="week-course-time">${esc(c.start)}–${esc(c.end)}</p><h3>${esc(c.name)}</h3>${c.room || c.teacher || c.note ? `<p class="week-course-meta">${[courseMeta(c, "<br>"), esc(c.note)].filter(Boolean).join("<br>")}</p>` : ""}${c.adjusted ? '<span class="tag adjusted">已调整</span>' : ""}</article>`;
   }
   function renderWeek(now) {
+    const weeks = availableWeeks(now);
+    if (!weeks.includes(selectedWeek)) selectedWeek = weeks[0];
+    $("week-select").value = String(selectedWeek);
     const key = now.date + ':' + selectedWeek;
     if (renderedWeekKey === key) return false;
     const currentWeek = core.weekOf(data, now.date);
@@ -80,9 +86,8 @@
     const last = core.addDays(monday, 6);
     text("week-title", isCurrent ? "本周课表" : "第 " + selectedWeek + " 周课表");
     text("week-range", (selectedWeek > 0 ? "第 " + selectedWeek + " 周 · " : "") + monday.slice(0, 4) + "年 " + core.shortDate(monday) + "—" + (monday.slice(0, 4) !== last.slice(0, 4) ? last.slice(0, 4) + "年 " : "") + core.shortDate(last));
-    $("week-select").value = String(selectedWeek);
-    $("prev-week").disabled = selectedWeek <= data.term.firstPublishedWeek || selectedWeek > data.term.lastPublishedWeek;
-    $("next-week").disabled = selectedWeek >= data.term.lastPublishedWeek || selectedWeek < data.term.firstPublishedWeek;
+    $("prev-week").disabled = weeks.indexOf(selectedWeek) === 0;
+    $("next-week").disabled = weeks.indexOf(selectedWeek) === weeks.length - 1;
     $("current-week").disabled = isCurrent;
     let cached = weekCache.get(key);
     if (!cached) {
@@ -106,9 +111,10 @@
     renderedWeekKey = key;
     return true;
   }
-  function renderChanges() {
-    const changes = [...data.changes].sort((a, b) => b.confirmedAt.localeCompare(a.confirmedAt));
-    const exceptions = data.studyExceptions;
+  function renderChanges(now) {
+    const first = core.mondayOf(now.date);
+    const changes = data.changes.filter(ch => ch.date >= first || (ch.action === "modify" && ch.to.date >= first)).sort((a, b) => b.confirmedAt.localeCompare(a.confirmedAt));
+    const exceptions = data.studyExceptions.filter(ex => ex.date >= first);
     text("changes-count", changes.length + exceptions.length + " 条");
     if (!changes.length && !exceptions.length) {
       $("changes-list").innerHTML = '<p class="changes-empty">暂无已录入的课程调整。当天临时变动、临时换教室等，请查看班群和教师通知。</p>';
@@ -131,6 +137,9 @@
       weekCache.clear();
       if (lastDate == null || selectedWeek === core.weekOf(data, lastDate)) selectedWeek = core.weekOf(data, now.date);
       buildWeekSelect(now);
+      renderChanges(now);
+      const firstVisible = Math.max(core.weekOf(data, now.date), data.term.firstPublishedWeek);
+      text("coverage-note", (firstVisible <= data.term.lastPublishedWeek ? `可查看：第 ${firstVisible}—${data.term.lastPublishedWeek} 周。` : "暂无本周及以后的已发布课表。") + "已结束的周不再显示。" + data.term.note);
       lastDate = now.date;
     }
     const currentWeek = core.weekOf(data, now.date);
@@ -159,13 +168,17 @@
     const updated = fullStamp(data.updatedAt);
     text("updated-top", "最近更新于 " + updated);
     text("updated-bottom", "最近更新于：" + updated + "（北京时间；刷新页面获取已发布更新）");
-    text("coverage-note", `数据范围：第 ${data.term.firstPublishedWeek}—${data.term.lastPublishedWeek} 周。${data.term.note}`);
-    renderChanges();
     render();
     $("schedule-content").hidden = false;
     $("week-select").addEventListener("change", e => { selectedWeek = Number(e.target.value); if (renderWeek(core.schoolNow())) animateWeekChange(); });
-    $("prev-week").addEventListener("click", () => { selectedWeek--; if (renderWeek(core.schoolNow())) animateWeekChange(); });
-    $("next-week").addEventListener("click", () => { selectedWeek++; if (renderWeek(core.schoolNow())) animateWeekChange(); });
+    function moveWeek(step) {
+      const now = core.schoolNow(), weeks = availableWeeks(now);
+      const index = Math.max(0, weeks.indexOf(selectedWeek));
+      selectedWeek = weeks[Math.max(0, Math.min(weeks.length - 1, index + step))];
+      if (renderWeek(now)) animateWeekChange();
+    }
+    $("prev-week").addEventListener("click", () => moveWeek(-1));
+    $("next-week").addEventListener("click", () => moveWeek(1));
     $("current-week").addEventListener("click", () => { selectedWeek = core.weekOf(data, core.schoolNow().date); if (renderWeek(core.schoolNow())) animateWeekChange(); });
     // 仅更新时钟状态，不做后台同步；离开页面后返回立即更新，避免过时的“正在上课”。
     setInterval(() => { try { render(); } catch (e) { showError(e); } }, 30000);
