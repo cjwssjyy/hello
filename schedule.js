@@ -8,7 +8,7 @@
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-20T21:16:06+08:00",
+  "updatedAt": "2026-10-20T22:55:56+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
     "firstPublishedWeek": 7,
@@ -26,6 +26,104 @@ window.COURSE_DATA = {
     "note": "晚自习"
   },
   "courses": [
+{
+        "id":  "chem-group1-1-lab",
+        "weekday":  1,
+        "weeks":  [
+                      8,
+                      9,
+                      11,
+                      16
+                  ],
+        "start":  "08:20",
+        "end":  "10:00",
+        "name":  "无机与分析化学B1（实验·一组）",
+        "kind":  "实验",
+        "labGroups":  [
+                          1
+                      ],
+        "room":  "实验楼B507",
+        "teacher":  "王一婷",
+        "note":  "仅一组同学上课。"
+    },
+    {
+        "id":  "chem-group2-1-lab",
+        "weekday":  1,
+        "weeks":  [
+                      8,
+                      9,
+                      11,
+                      16
+                  ],
+        "start":  "15:20",
+        "end":  "16:50",
+        "name":  "无机与分析化学B1（实验·二组）",
+        "kind":  "实验",
+        "labGroups":  [
+                          2
+                      ],
+        "room":  "实验楼B507",
+        "teacher":  "",
+        "note":  "仅二组同学上课。"
+    },
+    {
+        "id":  "chem-group1-3-lab",
+        "weekday":  3,
+        "weeks":  [
+                      8,
+                      9,
+                      11,
+                      16
+                  ],
+        "start":  "08:20",
+        "end":  "10:00",
+        "name":  "无机与分析化学B1（实验·一组）",
+        "kind":  "实验",
+        "labGroups":  [
+                          1
+                      ],
+        "room":  "实验楼B507",
+        "teacher":  "王一婷",
+        "note":  "仅一组同学上课。"
+    },
+    {
+        "id":  "chem-group2-3-lab",
+        "weekday":  3,
+        "weeks":  [
+                      8,
+                      9,
+                      11,
+                      16
+                  ],
+        "start":  "15:20",
+        "end":  "16:50",
+        "name":  "无机与分析化学B1（实验·二组）",
+        "kind":  "实验",
+        "labGroups":  [
+                          2
+                      ],
+        "room":  "实验楼B507",
+        "teacher":  "",
+        "note":  "仅二组同学上课。"
+    },
+    {
+        "id":  "chem-group2-wed-midday-lab",
+        "weekday":  3,
+        "weeks":  [
+                      8,
+                      16
+                  ],
+        "start":  "10:20",
+        "end":  "12:00",
+        "name":  "无机与分析化学B1（实验·二组）",
+        "kind":  "实验",
+        "labGroups":  [
+                          2
+                      ],
+        "room":  "实验楼B507",
+        "teacher":  "",
+        "note":  "仅二组同学上课。"
+    },
     {
       "id": "japanese-sat-afternoon", "weekday": 6,
       "audience": "japanese",
@@ -149,7 +247,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "chem-mon-lab", "weekday": 1,
-      "weeks": [5, 8, 9, 11, 16],
+      "weeks": [5],
       "start": "08:20", "end": "10:00",
       "name": "无机与分析化学B1", "kind": "实验",
       "room": "实验楼B507", "teacher": "王一婷", "note": ""
@@ -163,7 +261,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "chem-wed-lab", "weekday": 3,
-      "weeks": [5, 8, 9, 11, 16],
+      "weeks": [5],
       "start": "08:20", "end": "10:00",
       "name": "无机与分析化学B1", "kind": "实验",
       "room": "实验楼B507", "teacher": "王一婷", "note": ""
@@ -193,7 +291,7 @@ window.COURSE_DATA = {
       "id": "chem-thu-lab", "weekday": 4,
       "weeks": [8, 16],
       "start": "10:20", "end": "12:00",
-      "name": "无机与分析化学B1", "kind": "实验",
+      "labGroups": [1], "name": "无机与分析化学B1（实验·一组）", "kind": "实验",
       "room": "实验楼B507", "teacher": "王一婷", "note": ""
     },
     {
