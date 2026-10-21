@@ -15,6 +15,10 @@
 .hero-copy .title-highlight { position:relative; width:max-content; max-width:100%; }
 .title-highlight::after { content:""; position:absolute; left:0; right:3%; bottom:1px; height:9px; border-radius:90% 25% 70% 30%; background:#dfb75c4d; z-index:-1; transform-origin:left; animation:stage-underline-draw 1.1s cubic-bezier(.18,.8,.25,1) .55s both; }
 .hero-caption { animation: stage-caption-enter 1s ease-out .7s both; }
+.daily-boost { position:relative; z-index:2; display:flex; align-items:baseline; gap:12px; margin-top:28px; padding:13px 16px; border:1px solid #d6dfc6; border-radius:13px; background:#fffdf280; }
+.daily-boost-label { flex:none; color:#7a622f; font-size:11px; font-weight:650; letter-spacing:.5px; white-space:nowrap; }
+.daily-boost-label > span { margin-right:4px; color:#a98436; }
+.daily-boost p { margin:0; min-width:0; color:#34523a; font-size:14px; font-weight:550; line-height:1.7; }
 .stage-scenery { position:absolute; inset:0; overflow:hidden; z-index:0; pointer-events:none; border-radius:inherit; contain:paint; }
 .stage-glow { position:absolute; width:420px; height:420px; right:-90px; top:-110px; border-radius:50%; background:radial-gradient(circle,#f5d78899 0%,#c5d99855 40%,transparent 70%); animation:stage-glow-travel 11s ease-in-out -2s infinite; }
 .stage-orbit { position:absolute; width:360px; height:360px; top:-20px; right:-48px; border:2px solid #87a65a; border-radius:50%; opacity:0; animation:stage-orbit-expand 5.4s cubic-bezier(.2,.6,.3,1) -.4s infinite; }
@@ -78,6 +82,9 @@
 @keyframes stage-week-fade-b { from { opacity:.72; } to { opacity:1; } }
 @media(max-width:1050px) { .stage-sun { right:240px; } }
 @media(max-width:700px) {
+  .daily-boost { margin-top:24px; padding:12px 13px; gap:6px; flex-direction:column; align-items:flex-start; border-radius:12px; }
+  .daily-boost-label { font-size:10px; }
+  .daily-boost p { font-size:13px; line-height:1.8; }
   /* Bound the mobile paint area; no moving full-panel glow or repeated sweep. */
   .stage-glow { animation:none; opacity:.8; }
   .stage-streak { animation-iteration-count:1; }
