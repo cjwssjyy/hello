@@ -8,7 +8,7 @@
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-20T23:31:08+08:00",
+  "updatedAt": "2026-10-22T13:15:40+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
     "firstPublishedWeek": 8,
@@ -351,6 +351,52 @@ window.COURSE_DATA = {
     }
   ],
   "changes": [
+    {
+      "id": "sunday-monday-20261025-chem-group1",
+      "action": "add", "date": "2026-10-25",
+      "confirmedAt": "2026-10-22T13:15:40+08:00",
+      "note": "本周日（10月25日）按本周一（10月19日）课表上课，时间、教室、老师相同，早晚自习照常。仅一组同学上课。",
+      "course": {
+        "start": "08:20", "end": "10:00",
+        "name": "无机与分析化学B1（实验·一组）", "kind": "实验",
+        "labGroups": [1], "room": "实验楼B507", "teacher": "王一婷",
+        "note": "仅一组同学上课。"
+      }
+    },
+    {
+      "id": "sunday-monday-20261025-math",
+      "action": "add", "date": "2026-10-25",
+      "confirmedAt": "2026-10-22T13:15:40+08:00",
+      "note": "本周日（10月25日）按本周一（10月19日）课表上课，时间、教室、老师相同，早晚自习照常。",
+      "course": {
+        "start": "10:20", "end": "12:00",
+        "name": "高等数学A1", "kind": "理论",
+        "room": "三教213", "teacher": "牛艳秋", "note": ""
+      }
+    },
+    {
+      "id": "sunday-monday-20261025-chinese",
+      "action": "add", "date": "2026-10-25",
+      "confirmedAt": "2026-10-22T13:15:40+08:00",
+      "note": "本周日（10月25日）按本周一（10月19日）课表上课，时间、教室、老师相同，早晚自习照常。",
+      "course": {
+        "start": "13:20", "end": "15:00",
+        "name": "大学语文2", "kind": "理论",
+        "room": "一教B105", "teacher": "贾晶", "note": ""
+      }
+    },
+    {
+      "id": "sunday-monday-20261025-chem-group2",
+      "action": "add", "date": "2026-10-25",
+      "confirmedAt": "2026-10-22T13:15:40+08:00",
+      "note": "本周日（10月25日）按本周一（10月19日）课表上课，时间、教室、老师相同，早晚自习照常。仅二组同学上课。",
+      "course": {
+        "start": "15:20", "end": "16:50",
+        "name": "无机与分析化学B1（实验·二组）", "kind": "实验",
+        "labGroups": [2], "room": "实验楼B507", "teacher": "王一婷",
+        "note": "仅二组同学上课。"
+      }
+    },
     {
         "id":  "cancel-military-20261022",
         "action":  "cancel",
