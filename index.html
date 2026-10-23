@@ -7,12 +7,12 @@
   <meta name="description" content="查看今日、明日及本周班级课程安排。临时变动以班群和教师通知为准。">
   <title>课程查询 · 班级课表</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261020-rebuild">
+  <link rel="stylesheet" href="styles.css?v=20261023-quick-query">
   <script defer src="schedule.js?v=20261023-study-removal"></script>
   <script defer src="schedule-core.js?v=20261023-study-removal"></script>
   <link rel="stylesheet" href="mobile-stage.css?v=20261021-daily-boost1">
   <script defer src="mobile-stage.js?v=20261021-daily-boost1"></script>
-  <script defer src="app.js?v=20261020-current-weeks"></script>
+  <script defer src="app.js?v=20261023-quick-query"></script>
 </head>
 <body>
   <a class="skip-link" href="#today">跳到今日课程</a>
@@ -23,6 +23,7 @@
     </header>
 
     <main id="main-content">
+      <aside id="quick-course" class="quick-course" aria-label="当前或下一次课程安排" hidden><div><span id="quick-label" class="quick-label">下一次安排</span><div id="quick-detail"></div></div><a href="#today" class="quick-link">查看课表 ↓</a></aside>
       <section class="page-heading hero-panel" aria-labelledby="page-title">
         <div class="stage-scenery" aria-hidden="true"><span class="stage-glow"></span><span class="stage-orbit orbit-outer"></span><span class="stage-orbit orbit-inner"></span><span class="stage-sun">✳</span><span class="stage-star">✦</span><span class="stage-streak"></span><span class="stage-confetti piece-one"></span><span class="stage-confetti piece-two"></span><span class="stage-confetti piece-three"></span><span class="stage-confetti piece-four"></span><span class="stage-confetti piece-five"></span><span class="stage-confetti piece-six"></span></div>
         <div class="hero-main">
@@ -31,7 +32,7 @@
         </div>
         <aside class="daily-boost" aria-label="每日打气"><span class="daily-boost-label"><span aria-hidden="true">✦</span> 今日打气</span><p id="daily-boost-text">先做一点，动力会在路上追上你。</p></aside>
         <div class="hero-bottom"><p id="date-line" class="muted">正在读取课表…</p></div>
-        <div class="update-pill"><span class="status-dot" aria-hidden="true"></span><span id="updated-top">读取更新时间…</span></div>
+        <div class="update-tools"><div class="update-pill"><span class="status-dot" aria-hidden="true"></span><span id="updated-top">读取更新时间…</span><button id="refresh-schedule" class="refresh-button" type="button">刷新课表</button></div><p id="refresh-status" class="refresh-status" role="status" aria-live="polite"></p></div>
       </section>
 
       <aside class="notice" aria-label="使用提醒"><span class="notice-icon" aria-hidden="true">i</span><p><strong>临时通知，以班群和教师通知为准。</strong><span>本页不是官方教务系统，也不是紧急通知工具；只记录已发布的安排及提前半天以上确认的调整。</span></p></aside>
@@ -52,7 +53,7 @@
 
         <section id="week" class="week-section" aria-labelledby="week-title">
           <div class="week-toolbar"><div><p class="eyebrow">YOUR WEEK</p><h2 id="week-title">本周课表</h2><p id="week-range" class="muted"></p></div><div class="week-controls"><button id="prev-week" class="icon-button" aria-label="查看上一周">←</button><label class="week-select-label"><span class="sr-only">选择教学周</span><select id="week-select" aria-label="选择教学周"></select></label><button id="next-week" class="icon-button" aria-label="查看下一周">→</button><button id="current-week" class="text-button">回到本周</button></div></div>
-          <p class="week-footnote">仅显示本周及以后的课表，已结束的周每周自动移出列表。</p><p id="week-summary" class="week-summary"></p><div id="week-grid" class="week-grid"></div>
+          <p class="week-footnote">仅显示本周及以后的课表，已结束的周每周自动移出列表。</p><p id="week-summary" class="week-summary"></p><div class="mobile-week-tools"><div id="weekday-nav" class="weekday-nav" role="group" aria-label="选择星期"></div><button id="toggle-full-week" class="week-view-toggle" type="button" aria-expanded="false" aria-controls="week-grid">展开整周</button></div><div id="week-grid" class="week-grid"></div>
           <p class="week-footnote"><span class="legend-dot" aria-hidden="true"></span>晚自习：每天 18:00–19:30 没有全班晚课时，安排 18:30–20:00，一教404。日语生有日语晚课时，其他同学照常晚自习；请按适用人群查看。</p>
         </section>
 
