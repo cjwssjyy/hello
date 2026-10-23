@@ -8,7 +8,7 @@
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-22T13:15:40+08:00",
+  "updatedAt": "2026-10-23T17:01:00+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
     "firstPublishedWeek": 8,
@@ -18,6 +18,7 @@ window.COURSE_DATA = {
   "study": {
     "enabled": true,
     "weekdays": [1, 2, 3, 4, 5, 6, 7],
+    "excludedDates": ["2026-10-23"],
     "checkStart": "18:00",
     "checkEnd": "19:30",
     "start": "18:30",
@@ -218,7 +219,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "morning-sat", "weekday": 6,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "07:30", "end": "08:00",
       "name": "早自习", "kind": "自习",
       "room": "一教404", "teacher": "", "note": ""
@@ -411,7 +412,7 @@ window.COURSE_DATA = {
         "date":  "2026-10-23",
         "courseId":  "military-fri",
         "confirmedAt":  "2026-10-20T21:16:06+08:00",
-        "note":  "本周五军事理论改为晚自习：18:30–20:00，一教404，无任课老师。"
+        "note":  "本周五军事理论取消。"
     }
 ],
   "studyExceptions": []

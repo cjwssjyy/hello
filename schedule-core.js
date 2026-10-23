@@ -52,6 +52,9 @@
     }
     const study = data.study;
     assert(study && typeof study.enabled === "boolean" && Array.isArray(study.weekdays) && study.weekdays.every(d => Number.isInteger(d) && d >= 1 && d <= 7), "晚自习规则无效");
+    if (study.excludedDates !== undefined) {
+      assert(Array.isArray(study.excludedDates) && new Set(study.excludedDates).size === study.excludedDates.length && study.excludedDates.every(d => validDate(d) && isPublished(data, d) && study.weekdays.includes(weekday(d))), "晚自习排除日期无效或重复");
+    }
     validateTime(study, "晚自习");
     assert(typeof study.room === "string" && study.room.trim(), "晚自习教室不能为空");
     validateTime({start: study.checkStart, end: study.checkEnd}, "晚间检查时段");
@@ -121,7 +124,7 @@
     }
     const rule = data.study;
     const exception = data.studyExceptions.find(ex => ex.date === date);
-    const shouldStudy = (exception ? exception.enabled : rule.enabled) && rule.weekdays.includes(weekday(date));
+    const shouldStudy = (exception ? exception.enabled : rule.enabled) && rule.weekdays.includes(weekday(date)) && !(rule.excludedDates || []).includes(date);
     const evening = { start: rule.checkStart, end: rule.checkEnd };
     const japaneseEvening = list.some(c => c.audience === "japanese" && overlap(c, evening));
     const studyAudience = japaneseEvening ? "non-japanese" : "all";
