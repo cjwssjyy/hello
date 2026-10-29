@@ -7,12 +7,12 @@
   <meta name="description" content="查看今日、明日及本周班级课程安排。临时变动以班群和教师通知为准。">
   <title>课程查询 · 班级课表</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261023-quick-query">
-  <script defer src="schedule.js?v=20261023-study-removal"></script>
+  <link rel="stylesheet" href="styles.css?v=20261029-sunday-tuesday">
+  <script defer src="schedule.js?v=20261029-sunday-tuesday"></script>
   <script defer src="schedule-core.js?v=20261023-study-removal"></script>
   <link rel="stylesheet" href="mobile-stage.css?v=20261021-daily-boost1">
   <script defer src="mobile-stage.js?v=20261021-daily-boost1"></script>
-  <script defer src="app.js?v=20261023-quick-query"></script>
+  <script defer src="app.js?v=20261029-sunday-tuesday"></script>
 </head>
 <body>
   <a class="skip-link" href="#today">跳到今日课程</a>
@@ -37,6 +37,7 @@
 
       <aside class="notice" aria-label="使用提醒"><span class="notice-icon" aria-hidden="true">i</span><p><strong>临时通知，以班群和教师通知为准。</strong><span>本页不是官方教务系统，也不是紧急通知工具；只记录已发布的安排及提前半天以上确认的调整。</span></p></aside>
 
+      <aside id="important-changes" class="important-changes" aria-label="重要课程调整" hidden></aside>
       <div id="load-error" class="error-panel" role="alert" hidden></div>
       <noscript><p class="error-panel">请启用浏览器 JavaScript，以查看课程安排。</p></noscript>
       <div id="schedule-content" hidden>

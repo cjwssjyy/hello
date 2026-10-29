@@ -2,23 +2,23 @@
  * weeks 是实际开课的教学周；weekday 为周一=1，…，周日=7。
  * 不要删除开头的 window.COURSE_DATA = 或最后的分号。
  * 修改方法、临时调整格式和发布步骤见 使用与维护.md。
- * 已清理第8周以前的历史安排。日语：第8—10周周六晚课，
- * 第8—10周周六15:20–16:50保留人工智能导论；第11—18周周日下午两次课。
+ * 已清理第9周以前的历史安排。日语：第9—10周周六晚课，
+ * 第9—10周周六15:20–16:50保留人工智能导论；第11—18周周日下午两次课。
  */
 window.COURSE_DATA = {
   "className": "课程查询",
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-10-23T17:01:00+08:00",
+  "updatedAt": "2026-10-29T14:16:46+08:00",
   "term": {
     "weekOneMonday": "2026-08-31",
-    "firstPublishedWeek": 8,
+    "firstPublishedWeek": 9,
     "lastPublishedWeek": 18,
     "note": "按提供的教务课表周次整理；第7周为10月12日至18日。节假日、补课及后续调整需由学习委员另行维护。"
   },
   "study": {
     "enabled": true,
     "weekdays": [1, 2, 3, 4, 5, 6, 7],
-    "excludedDates": ["2026-10-23"],
+    "excludedDates": [],
     "checkStart": "18:00",
     "checkEnd": "19:30",
     "start": "18:30",
@@ -30,12 +30,7 @@ window.COURSE_DATA = {
 {
         "id":  "chem-group1-1-lab",
         "weekday":  1,
-        "weeks":  [
-                      8,
-                      9,
-                      11,
-                      16
-                  ],
+        "weeks": [9,11,16],
         "start":  "08:20",
         "end":  "10:00",
         "name":  "无机与分析化学B1（实验·一组）",
@@ -50,12 +45,7 @@ window.COURSE_DATA = {
     {
         "id":  "chem-group2-1-lab",
         "weekday":  1,
-        "weeks":  [
-                      8,
-                      9,
-                      11,
-                      16
-                  ],
+        "weeks": [9,11,16],
         "start":  "15:20",
         "end":  "16:50",
         "name":  "无机与分析化学B1（实验·二组）",
@@ -70,12 +60,7 @@ window.COURSE_DATA = {
     {
         "id":  "chem-group1-3-lab",
         "weekday":  3,
-        "weeks":  [
-                      8,
-                      9,
-                      11,
-                      16
-                  ],
+        "weeks": [9,11,16],
         "start":  "08:20",
         "end":  "10:00",
         "name":  "无机与分析化学B1（实验·一组）",
@@ -90,12 +75,7 @@ window.COURSE_DATA = {
     {
         "id":  "chem-group2-3-lab",
         "weekday":  3,
-        "weeks":  [
-                      8,
-                      9,
-                      11,
-                      16
-                  ],
+        "weeks": [9,11,16],
         "start":  "15:20",
         "end":  "16:50",
         "name":  "无机与分析化学B1（实验·二组）",
@@ -110,10 +90,7 @@ window.COURSE_DATA = {
     {
         "id":  "chem-group2-wed-midday-lab",
         "weekday":  3,
-        "weeks":  [
-                      8,
-                      16
-                  ],
+        "weeks": [16],
         "start":  "10:20",
         "end":  "12:00",
         "name":  "无机与分析化学B1（实验·二组）",
@@ -128,7 +105,7 @@ window.COURSE_DATA = {
     {
       "id": "japanese-sat-evening", "weekday": 6,
       "audience": "japanese",
-      "weeks": [8,9,10],
+      "weeks": [9,10],
       "start": "18:00", "end": "19:30",
       "name": "日语课（日语生注意）", "kind": "",
       "room": "一教B102", "teacher": "",
@@ -137,7 +114,7 @@ window.COURSE_DATA = {
     {
       "id": "japanese-sun-early", "weekday": 7,
       "audience": "japanese",
-      "weeks": [11, 12, 13, 14, 15, 16, 17, 18],
+      "weeks": [11,12,13,14,15,16,17,18],
       "start": "13:20", "end": "15:00",
       "name": "日语课（日语生注意）", "kind": "",
       "room": "一教B102", "teacher": "", "note": ""
@@ -145,14 +122,14 @@ window.COURSE_DATA = {
     {
       "id": "japanese-sun-late", "weekday": 7,
       "audience": "japanese",
-      "weeks": [11, 12, 13, 14, 15, 16, 17, 18],
+      "weeks": [11,12,13,14,15,16,17,18],
       "start": "15:20", "end": "16:50",
       "name": "日语课（日语生注意）", "kind": "",
       "room": "一教B102", "teacher": "", "note": ""
     },
     {
       "id": "english-group1-tue", "weekday": 2,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "08:20", "end": "10:00",
       "name": "英语课（A，B1,B4,B7,B8）", "kind": "分班课程",
       "room": "", "roomOmitted": true, "teacher": "",
@@ -160,7 +137,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "english-group2-tue", "weekday": 2,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "10:20", "end": "12:00",
       "name": "英语课（B2，B3，B5，B6，B9，C1，C2）", "kind": "分班课程",
       "room": "", "roomOmitted": true, "teacher": "",
@@ -168,7 +145,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "english-group1-thu", "weekday": 4,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "13:20", "end": "15:00",
       "name": "英语课（A，B1,B4,B7,B8）", "kind": "分班课程",
       "room": "", "roomOmitted": true, "teacher": "",
@@ -176,7 +153,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "english-group2-thu", "weekday": 4,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "15:20", "end": "16:50",
       "name": "英语课（B2，B3，B5，B6，B9，C1，C2）", "kind": "分班课程",
       "room": "", "roomOmitted": true, "teacher": "",
@@ -184,35 +161,35 @@ window.COURSE_DATA = {
     },
     {
       "id": "morning-mon", "weekday": 1,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "07:30", "end": "08:00",
       "name": "早自习", "kind": "自习",
       "room": "一教404", "teacher": "", "note": ""
     },
     {
       "id": "morning-tue", "weekday": 2,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "07:30", "end": "08:00",
       "name": "早自习", "kind": "自习",
       "room": "一教404", "teacher": "", "note": ""
     },
     {
       "id": "morning-wed", "weekday": 3,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "07:30", "end": "08:00",
       "name": "早自习", "kind": "自习",
       "room": "一教404", "teacher": "", "note": ""
     },
     {
       "id": "morning-thu", "weekday": 4,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "07:30", "end": "08:00",
       "name": "早自习", "kind": "自习",
       "room": "一教404", "teacher": "", "note": ""
     },
     {
       "id": "morning-fri", "weekday": 5,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "07:30", "end": "08:00",
       "name": "早自习", "kind": "自习",
       "room": "一教404", "teacher": "", "note": ""
@@ -226,7 +203,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "morning-sun", "weekday": 7,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "07:30", "end": "08:00",
       "name": "早自习", "kind": "自习",
       "room": "一教404", "teacher": "", "note": ""
@@ -247,7 +224,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "chinese-thu", "weekday": 4,
-      "weeks": [8,10,12,14,16,18],
+      "weeks": [10,12,14,16,18],
       "start": "08:20", "end": "10:00",
       "name": "大学语文2", "kind": "理论",
       "room": "一教B105", "teacher": "贾晶", "note": ""
@@ -261,56 +238,56 @@ window.COURSE_DATA = {
     },
     {
       "id": "math-mon", "weekday": 1,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "10:20", "end": "12:00",
       "name": "高等数学A1", "kind": "理论",
       "room": "三教213", "teacher": "牛艳秋", "note": ""
     },
     {
       "id": "chem-thu-lab", "weekday": 4,
-      "weeks": [8, 16],
+      "weeks": [16],
       "start": "10:20", "end": "12:00",
       "labGroups": [1], "name": "无机与分析化学B1（实验·一组）", "kind": "实验",
       "room": "实验楼B507", "teacher": "王一婷", "note": ""
     },
     {
       "id": "sport-fri", "weekday": 5,
-      "weeks": [8,9,10,11,12,13,14,15,16],
+      "weeks": [9,10,11,12,13,14,15,16],
       "start": "10:20", "end": "12:00",
       "name": "体育1", "kind": "理论",
       "room": "第一田径场", "teacher": "贾远航", "note": ""
     },
     {
       "id": "art-sat", "weekday": 6,
-      "weeks": [8,9,10,11,12],
+      "weeks": [9,10,11,12],
       "start": "10:20", "end": "12:00",
       "name": "大学美育", "kind": "理论",
       "room": "二教B203", "teacher": "李辰", "note": ""
     },
     {
       "id": "chinese-mon", "weekday": 1,
-      "weeks": [8,9,10,11,12,13,14,15,16,17],
+      "weeks": [9,10,11,12,13,14,15,16,17],
       "start": "13:20", "end": "15:00",
       "name": "大学语文2", "kind": "理论",
       "room": "一教B105", "teacher": "贾晶", "note": ""
     },
     {
       "id": "math-tue", "weekday": 2,
-      "weeks": [8,9,10,11,12,13,14,15,16,17,18],
+      "weeks": [9,10,11,12,13,14,15,16,17,18],
       "start": "13:20", "end": "15:00",
       "name": "高等数学A1", "kind": "理论",
       "room": "三教213", "teacher": "牛艳秋", "note": ""
     },
     {
       "id": "ethics-fri", "weekday": 5,
-      "weeks": [8,9,10,11,12,13,14,15,16],
+      "weeks": [9,10,11,12,13,14,15,16],
       "start": "13:20", "end": "15:00",
       "name": "思想道德与法治", "kind": "理论",
       "room": "三教121", "teacher": "杜晓红", "note": ""
     },
     {
       "id": "ethics-tue", "weekday": 2,
-      "weeks": [8,9,10,11,12,13,14,15,16],
+      "weeks": [9,10,11,12,13,14,15,16],
       "start": "15:20", "end": "16:50",
       "name": "思想道德与法治", "kind": "理论",
       "room": "三教121", "teacher": "杜晓红", "note": ""
@@ -324,7 +301,7 @@ window.COURSE_DATA = {
     },
     {
       "id": "ai-sat", "weekday": 6,
-      "weeks": [8,9,10,11,12,13,14],
+      "weeks": [9,10,11,12,13,14],
       "start": "15:20", "end": "16:50",
       "name": "人工智能导论", "kind": "理论",
       "room": "实验楼B420", "teacher": "张锦", "note": ""
@@ -338,14 +315,14 @@ window.COURSE_DATA = {
     },
     {
       "id": "military-thu", "weekday": 4,
-      "weeks": [8,9,10,11],
+      "weeks": [9,10,11],
       "start": "18:00", "end": "19:30",
       "name": "军事理论", "kind": "理论",
       "room": "一教B202", "teacher": "于霄达", "note": ""
     },
     {
       "id": "military-fri", "weekday": 5,
-      "weeks": [8,9,10,11],
+      "weeks": [9,10,11],
       "start": "18:00", "end": "19:30",
       "name": "军事理论", "kind": "理论",
       "room": "一教B202", "teacher": "于霄达", "note": ""
@@ -353,67 +330,107 @@ window.COURSE_DATA = {
   ],
   "changes": [
     {
-      "id": "sunday-monday-20261025-chem-group1",
-      "action": "add", "date": "2026-10-25",
-      "confirmedAt": "2026-10-22T13:15:40+08:00",
-      "note": "本周日（10月25日）按本周一（10月19日）课表上课，时间、教室、老师相同，早晚自习照常。仅一组同学上课。",
+      "id": "sunday-tuesday-20261101-english-group1-tue",
+      "action": "add",
+      "date": "2026-11-01",
+      "confirmedAt": "2026-10-29T14:16:46+08:00",
+      "adjustmentGroup": "sunday-tuesday-20261101",
+      "adjustmentTitle": "重要调整：11月1日（周日）按10月27日（周二）课表上课",
+      "adjustmentSummary": "时间、教室、老师及英语分班与本周二相同。早自习照常；18:00–19:30上大学美育，当晚不安排晚自习。周二原安排不变。",
+      "emphasize": true,
+      "note": "重要调整：11月1日（周日）增上10月27日（周二）的课程。仅对应英语分班同学上课；教室和老师请按本人分班安排确认。",
       "course": {
-        "start": "08:20", "end": "10:00",
-        "name": "无机与分析化学B1（实验·一组）", "kind": "实验",
-        "labGroups": [1], "room": "实验楼B507", "teacher": "王一婷",
-        "note": "仅一组同学上课。"
+        "start": "08:20",
+        "end": "10:00",
+        "name": "英语课（A，B1,B4,B7,B8）",
+        "kind": "分班课程",
+        "room": "",
+        "roomOmitted": true,
+        "teacher": "",
+        "note": "仅对应英语分班同学上课；教室和老师请按本人分班安排确认。"
       }
     },
     {
-      "id": "sunday-monday-20261025-math",
-      "action": "add", "date": "2026-10-25",
-      "confirmedAt": "2026-10-22T13:15:40+08:00",
-      "note": "本周日（10月25日）按本周一（10月19日）课表上课，时间、教室、老师相同，早晚自习照常。",
+      "id": "sunday-tuesday-20261101-english-group2-tue",
+      "action": "add",
+      "date": "2026-11-01",
+      "confirmedAt": "2026-10-29T14:16:46+08:00",
+      "adjustmentGroup": "sunday-tuesday-20261101",
+      "adjustmentTitle": "重要调整：11月1日（周日）按10月27日（周二）课表上课",
+      "adjustmentSummary": "时间、教室、老师及英语分班与本周二相同。早自习照常；18:00–19:30上大学美育，当晚不安排晚自习。周二原安排不变。",
+      "emphasize": true,
+      "note": "重要调整：11月1日（周日）增上10月27日（周二）的课程。仅对应英语分班同学上课；教室和老师请按本人分班安排确认。",
       "course": {
-        "start": "10:20", "end": "12:00",
-        "name": "高等数学A1", "kind": "理论",
-        "room": "三教213", "teacher": "牛艳秋", "note": ""
+        "start": "10:20",
+        "end": "12:00",
+        "name": "英语课（B2，B3，B5，B6，B9，C1，C2）",
+        "kind": "分班课程",
+        "room": "",
+        "roomOmitted": true,
+        "teacher": "",
+        "note": "仅对应英语分班同学上课；教室和老师请按本人分班安排确认。"
       }
     },
     {
-      "id": "sunday-monday-20261025-chinese",
-      "action": "add", "date": "2026-10-25",
-      "confirmedAt": "2026-10-22T13:15:40+08:00",
-      "note": "本周日（10月25日）按本周一（10月19日）课表上课，时间、教室、老师相同，早晚自习照常。",
+      "id": "sunday-tuesday-20261101-math-tue",
+      "action": "add",
+      "date": "2026-11-01",
+      "confirmedAt": "2026-10-29T14:16:46+08:00",
+      "adjustmentGroup": "sunday-tuesday-20261101",
+      "adjustmentTitle": "重要调整：11月1日（周日）按10月27日（周二）课表上课",
+      "adjustmentSummary": "时间、教室、老师及英语分班与本周二相同。早自习照常；18:00–19:30上大学美育，当晚不安排晚自习。周二原安排不变。",
+      "emphasize": true,
+      "note": "重要调整：11月1日（周日）增上10月27日（周二）的课程。",
       "course": {
-        "start": "13:20", "end": "15:00",
-        "name": "大学语文2", "kind": "理论",
-        "room": "一教B105", "teacher": "贾晶", "note": ""
+        "start": "13:20",
+        "end": "15:00",
+        "name": "高等数学A1",
+        "kind": "理论",
+        "room": "三教213",
+        "teacher": "牛艳秋",
+        "note": ""
       }
     },
     {
-      "id": "sunday-monday-20261025-chem-group2",
-      "action": "add", "date": "2026-10-25",
-      "confirmedAt": "2026-10-22T13:15:40+08:00",
-      "note": "本周日（10月25日）按本周一（10月19日）课表上课，时间、教室、老师相同，早晚自习照常。仅二组同学上课。",
+      "id": "sunday-tuesday-20261101-ethics-tue",
+      "action": "add",
+      "date": "2026-11-01",
+      "confirmedAt": "2026-10-29T14:16:46+08:00",
+      "adjustmentGroup": "sunday-tuesday-20261101",
+      "adjustmentTitle": "重要调整：11月1日（周日）按10月27日（周二）课表上课",
+      "adjustmentSummary": "时间、教室、老师及英语分班与本周二相同。早自习照常；18:00–19:30上大学美育，当晚不安排晚自习。周二原安排不变。",
+      "emphasize": true,
+      "note": "重要调整：11月1日（周日）增上10月27日（周二）的课程。",
       "course": {
-        "start": "15:20", "end": "16:50",
-        "name": "无机与分析化学B1（实验·二组）", "kind": "实验",
-        "labGroups": [2], "room": "实验楼B507", "teacher": "王一婷",
-        "note": "仅二组同学上课。"
+        "start": "15:20",
+        "end": "16:50",
+        "name": "思想道德与法治",
+        "kind": "理论",
+        "room": "三教121",
+        "teacher": "杜晓红",
+        "note": ""
       }
     },
     {
-        "id":  "cancel-military-20261022",
-        "action":  "cancel",
-        "date":  "2026-10-22",
-        "courseId":  "military-thu",
-        "confirmedAt":  "2026-10-20T21:16:06+08:00",
-        "note":  "本周四军事理论改为晚自习：18:30–20:00，一教404，无任课老师。"
-    },
-    {
-        "id":  "cancel-military-20261023",
-        "action":  "cancel",
-        "date":  "2026-10-23",
-        "courseId":  "military-fri",
-        "confirmedAt":  "2026-10-20T21:16:06+08:00",
-        "note":  "本周五军事理论取消。"
+      "id": "sunday-tuesday-20261101-art-tue",
+      "action": "add",
+      "date": "2026-11-01",
+      "confirmedAt": "2026-10-29T14:16:46+08:00",
+      "adjustmentGroup": "sunday-tuesday-20261101",
+      "adjustmentTitle": "重要调整：11月1日（周日）按10月27日（周二）课表上课",
+      "adjustmentSummary": "时间、教室、老师及英语分班与本周二相同。早自习照常；18:00–19:30上大学美育，当晚不安排晚自习。周二原安排不变。",
+      "emphasize": true,
+      "note": "重要调整：11月1日（周日）增上10月27日（周二）的课程。",
+      "course": {
+        "start": "18:00",
+        "end": "19:30",
+        "name": "大学美育",
+        "kind": "理论",
+        "room": "一教B201",
+        "teacher": "李辰",
+        "note": ""
+      }
     }
-],
+  ],
   "studyExceptions": []
 };

@@ -160,7 +160,18 @@
     const newLine = ch.action === 'modify' ? core.shortDate(ch.to.date) + ' ' + ch.to.start + '–' + ch.to.end + ((ch.to.room ?? original.room) ? ' · ' + (ch.to.room ?? original.room) : '') : '';
     return '<article class="change-item"><h3>' + esc(courseTitle(original)) + '<span class="change-status">' + status + '</span></h3>' + audienceMarkup(original) + '<p>' + (ch.action === 'add' ? '安排：' : '原安排：') + esc(oldLine) + '</p>' + (newLine ? '<p>调整为：' + esc(newLine) + '</p>' : '') + '<p class="change-reason">' + esc(ch.note) + '</p><p>确认于 ' + esc(fullStamp(ch.confirmedAt)) + '（北京时间）</p></article>';
   }
+  function renderImportantChanges(now) {
+    const groups = new Map();
+    data.changes.filter(ch => ch.emphasize === true && (ch.date >= now.date || (ch.action === 'modify' && ch.to.date >= now.date))).forEach(ch => {
+      const key = ch.adjustmentGroup || ch.id;
+      if (!groups.has(key)) groups.set(key, ch);
+    });
+    const panel = $('important-changes');
+    panel.hidden = groups.size === 0;
+    panel.innerHTML = Array.from(groups.values()).map(ch => '<div class="important-change"><p class="important-kicker">课程调整 · 请留意</p><h2>' + esc(ch.adjustmentTitle || ch.note) + '</h2>' + (ch.adjustmentSummary ? '<p>' + esc(ch.adjustmentSummary) + '</p>' : '') + '<a href="#changes">查看本次调整的课程 ↓</a></div>').join('');
+  }
   function renderChanges(now) {
+    renderImportantChanges(now);
     const first = core.mondayOf(now.date);
     const changes = data.changes.filter(ch => ch.date >= first || (ch.action === 'modify' && ch.to.date >= first)).sort((a, b) => b.confirmedAt.localeCompare(a.confirmedAt));
     const exceptions = data.studyExceptions.filter(ex => ex.date >= first);
@@ -168,9 +179,9 @@
     changes.forEach(ch => {
       // 同日期、同确认时间且有完全相同的整日调课说明，才合并；其他调整独立保留。
       const prefix = ch.action === 'add' && ch.note.match(/^(本周日（\d+月\d+日）按本周一（\d+月\d+日）课表上课，时间、教室、老师相同，早晚自习照常。)/);
-      const key = prefix ? ch.date + '/' + ch.confirmedAt + '/' + prefix[1] : ch.id;
+      const key = ch.adjustmentGroup ? ch.date + '/' + ch.adjustmentGroup : prefix ? ch.date + '/' + ch.confirmedAt + '/' + prefix[1] : ch.id;
       let group = groups.find(g => g.key === key);
-      if (!group) { group = { key, note: prefix ? prefix[1] : '', items: [] }; groups.push(group); }
+      if (!group) { group = { key, note: ch.adjustmentSummary || (prefix ? prefix[1] : ''), title: ch.adjustmentTitle || '', emphasized: ch.emphasize === true, items: [] }; groups.push(group); }
       group.items.push(ch);
     });
     text('changes-count', groups.length + exceptions.length + ' 条');
@@ -181,9 +192,9 @@
     let html = groups.map(group => {
       if (group.items.length < 2 || !group.note) return group.items.map(changeCard).join('');
       const firstChange = group.items[0];
-      const title = group.note.split('课表上课')[0] + '课表上课';
-      const rows = group.items.slice().sort((a, b) => a.course.start.localeCompare(b.course.start)).map(ch => '<li><span class="change-course-time">' + esc(ch.course.start) + '–' + esc(ch.course.end) + '</span>' + titleMarkup(ch.course) + '<p>' + courseMeta(ch.course, ' · ') + '</p>' + (ch.note.slice(group.note.length) ? '<p>' + esc(ch.note.slice(group.note.length)) + '</p>' : '') + '</li>').join('');
-      return '<article class="change-item change-group"><h3>' + esc(title) + '<span class="change-status">已调整</span></h3><p class="change-reason">' + esc(group.note) + '</p><details><summary>展开查看 ' + group.items.length + ' 项课程</summary><ul class="change-course-list">' + rows + '</ul></details><p>确认于 ' + esc(fullStamp(firstChange.confirmedAt)) + '（北京时间）</p></article>';
+      const title = group.title || group.note.split('课表上课')[0] + '课表上课';
+      const rows = group.items.slice().sort((a, b) => a.course.start.localeCompare(b.course.start)).map(ch => '<li><span class="change-course-time">' + esc(ch.course.start) + '–' + esc(ch.course.end) + '</span>' + titleMarkup(ch.course) + '<p>' + courseMeta(ch.course, ' · ') + '</p>' + (ch.course.note ? '<p>' + esc(ch.course.note) + '</p>' : '') + '</li>').join('');
+      return '<article class="change-item change-group' + (group.emphasized ? ' priority-change' : '') + '"><h3>' + esc(title) + '<span class="change-status">已调整</span></h3><p class="change-reason">' + esc(group.note) + '</p><details' + (group.emphasized ? ' open' : '') + '><summary>查看 ' + group.items.length + ' 项课程明细</summary><ul class="change-course-list">' + rows + '</ul></details><p>确认于 ' + esc(fullStamp(firstChange.confirmedAt)) + '（北京时间）</p></article>';
     }).join('');
     html += exceptions.map(ex => '<article class="change-item"><h3>' + esc(core.shortDate(ex.date)) + ' 晚自习<span class="change-status">' + (ex.enabled ? '已安排' : '已取消') + '</span></h3><p class="change-reason">' + esc(ex.note) + '</p><p>确认于 ' + esc(fullStamp(ex.confirmedAt)) + '（北京时间）</p></article>').join('');
     $('changes-list').innerHTML = html;
@@ -275,6 +286,7 @@
   function showError(error) {
     $("schedule-content").hidden = true;
     $("quick-course").hidden = true;
+    $("important-changes").hidden = true;
     $("load-error").hidden = false;
     $("load-error").innerHTML = `<strong>课表暂时无法显示，请查看班群通知。</strong><p>数据未能完整读取或校验通过，不能据此判断为无课。请联系学习委员检查后刷新。</p><p>错误说明：${esc(error.message)}</p>`;
     text("updated-top", "课表读取失败");
